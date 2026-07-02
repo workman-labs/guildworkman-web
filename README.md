@@ -1,70 +1,138 @@
-# Getting Started with Create React App
+# Sabi-Connect Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The client-facing web app for **Sabi-Connect**, a marketplace that connects
+clients with skilled workers (electricians, plumbers, beauticians,
+carpenters, fashion designers, photographers, etc.) for bookable
+appointments. This is a [Create React App](https://github.com/facebook/create-react-app)
+single-page app that talks to the Sabi-Connect Spring Boot API
+(see [`SabiConnect-Backend`](https://github.com/workman-labs/SabiConnect-Backend) /
+[`backendend`](https://github.com/workman-labs/backendend)).
 
-## Available Scripts
+## Tech stack
 
-In the project directory, you can run:
+- **React 18** with `react-router-dom` v6 (`useRoutes`) for routing
+- **MUI 5** (`@mui/material`, `@mui/icons-material`), Emotion, FontAwesome and Heroicons for UI
+- **Formik** + **Yup** and **react-hook-form** for form handling/validation
+- **axios** and the native `fetch` API (used interchangeably across API modules) for HTTP calls
+- **Leaflet** / **react-leaflet** for map rendering
+- **react-dropzone**, **autosuggest-highlight**, **react-icons** as supporting UI utilities
+- Bootstrapped with `react-scripts` (Create React App), unejected
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Based on the routes and pages actually implemented (`src/route/index.jsx`):
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Home** — public landing page (`src/pages/Home`)
+- **Client sign up** (`/client`) and **login** (`/login`) — separate flows for clients and skilled workers (`src/pages/LoginPg`, `src/pages/Dashbord/appoint/bookApp/clientrequests/clientregister`)
+- **Skilled worker sign up** (`/skilWok`) — worker onboarding/profile creation (`src/pages/Dashbord/appoint/bookApp/workerrequests`)
+- **Dashboard** (`/dashboard`) — logged-in landing area (`src/pages/Dashbord/dashboard`)
+- **Browse workers by category** (`/book/:category`) — e.g. Electrical, Plumbing, Beauty Care, Carpentry, Fashion, Photography (`src/constants/Constants.jsx`, `src/pages/Dashbord/catigory`)
+- **Book / cancel / update / view appointments** (`/book`, `/cancel`, `/update`, `/view`, `/appoint`) — the core appointment lifecycle UI (`src/pages/Dashbord/appoint`)
+- **Appointment manager** (`/appMan`) — accept/decline incoming appointment requests for workers (`src/pages/Dashbord/appointmanager`, `appoint/acceptApp`, `appoint/declineApp`)
 
-### `npm test`
+> Note: the router currently has a duplicated `/appMan` route entry and one
+> empty route object at the end of `ROUTE` in `src/route/index.jsx` — worth
+> cleaning up. A commented-out `/jobs` route (`src/pages/Jobs`) also exists
+> in the codebase but isn't currently wired into the router.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project structure
 
-### `npm run build`
+```
+src/
+  App.js              # renders the router (useRoutes)
+  route/index.jsx      # all route definitions
+  component/           # shared UI (navbar, footer, layout) + API modules
+    clientApi.jsx       # client signup/appointment HTTP calls
+    loginApi.jsx         # client/worker login
+    skilledworkerApi.jsx # skilled worker signup/skill HTTP calls
+  pages/
+    Home/               # landing page
+    LoginPg/             # client + worker login screens
+    Jobs/                # (not currently routed)
+    Dashbord/            # everything behind login: appointments, dashboard,
+                          # worker categories, appointment manager
+  constants/            # static category/data lookups + demo images
+  assets/               # images used across worker category cards
+  TileLayer.ProjWMTS.js # Leaflet WMTS tile layer helper
+public/
+  wmts*.html            # standalone Leaflet/WMTS demo pages (not part of
+                         # the React app's routed UI — reference/example
+                         # pages for the map tile integration)
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## API integration
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The API modules under `src/component/` call the production backend
+directly over HTTPS, with the local backend URL left commented out for
+local development, e.g. (`src/component/clientApi.jsx`):
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```js
+const URL = 'https://sabiconnect-latest.onrender.com/api/v1/client/registerClient';
+// const URL = 'http://localhost:8080/api/v1/client/registerClient';
+```
 
-### `npm run eject`
+There's no central `API_BASE_URL` env var yet — each API module
+(`clientApi.jsx`, `loginApi.jsx`, `skilledworkerApi.jsx`) hardcodes the
+backend host per function. To point the app at a local backend, uncomment
+the `localhost:8080` line(s) for the endpoints you're testing.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Endpoints called by the frontend today include (all under `/api/v1`):
+`client/registerClient`, `client/updateAppointment`, `auth/login/client`,
+`auth/login/worker`, `skilledWorker/addSkill`, `skilledWorker/registerSkilledWorker`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Prerequisites
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Node.js 18+ and npm
+- A running instance of the Sabi-Connect backend (local or the hosted one above) if you want authenticated flows to work
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Setup
 
-## Learn More
+```sh
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Environment variables
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`src/.env` currently defines:
 
-### Code Splitting
+```
+GOOGLE_KEY=<google-api-key>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+> **Security note:** a real-looking Google API key and, in the git
+> history, a Mapbox secret access token were both found committed to this
+> repository. Treat both as compromised — rotate/revoke them in their
+> respective consoles — and move any future secrets into an untracked
+> `.env.local` (Create React App loads `.env`, `.env.local`, etc.
+> automatically) rather than committing them.
 
-### Analyzing the Bundle Size
+## Running locally
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```sh
+npm start
+```
 
-### Making a Progressive Web App
+Runs the app at [http://localhost:3000](http://localhost:3000) with hot reload.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Building for production
 
-### Advanced Configuration
+```sh
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Outputs an optimized, minified build to `build/`.
 
-### Deployment
+## Testing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```sh
+npm test
+```
 
-### `npm run build` fails to minify
+Runs `react-scripts test` in interactive watch mode (Jest + React Testing
+Library). Only a default `App.test.js` smoke test exists today — most
+pages and API modules don't yet have test coverage.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Contributing
+
+Branches observed in this repo: `dev` (default), `frontendtesting`,
+`hommy`, `main`. Open a PR against `dev` for review before merging.
