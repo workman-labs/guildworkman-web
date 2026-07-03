@@ -22,7 +22,7 @@ const AppointmentComponent = () => {
     return (
         <div className="appointment-container">
             <div className={styles.scrollWatcher}></div>
-            <h1 className={styles.logoH1}>SabiConnect</h1>
+            <h1 className={styles.logoH1}>GuildWorkman</h1>
             <h2>{isClient ? 'Client Appointment' : 'Skilled Worker Appointment'}</h2>
             <img className={styles.bannerImage} src={banner} alt={''} />
             <div className="appointment-actions">

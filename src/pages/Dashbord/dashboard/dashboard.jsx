@@ -13,7 +13,7 @@ const Dashboard = () => {
 
             <div className={style.logo}>
                 <BiBookAlt className={style.logoIcon}/>
-                <h2>SabiConnect</h2>
+                <h2>GuildWorkman</h2>
 
             </div>
             <div className={style.menuList}>

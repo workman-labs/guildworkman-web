@@ -1,12 +1,12 @@
-# Sabi-Connect Frontend
+# GuildWorkman Web
 
-The client-facing web app for **Sabi-Connect**, a marketplace that connects
-clients with skilled workers (electricians, plumbers, beauticians,
-carpenters, fashion designers, photographers, etc.) for bookable
-appointments. This is a [Create React App](https://github.com/facebook/create-react-app)
-single-page app that talks to the Sabi-Connect Spring Boot API
-(see [`SabiConnect-Backend`](https://github.com/workman-labs/SabiConnect-Backend) /
-[`backendend`](https://github.com/workman-labs/backendend)).
+The client-facing web app for **GuildWorkman** (a rebrand of the original
+Sabi-Connect project), a marketplace that connects clients with skilled
+workers (electricians, plumbers, beauticians, carpenters, fashion designers,
+photographers, etc.) for bookable appointments. This is a
+[Create React App](https://github.com/facebook/create-react-app) single-page
+app that talks to the GuildWorkman Spring Boot API
+(see [`guildworkman-api`](https://github.com/workman-labs/guildworkman-api)).
 
 ## Tech stack
 
@@ -67,7 +67,7 @@ directly over HTTPS, with the local backend URL left commented out for
 local development, e.g. (`src/component/clientApi.jsx`):
 
 ```js
-const URL = 'https://sabiconnect-latest.onrender.com/api/v1/client/registerClient';
+const URL = 'https://guildworkman-api.onrender.com/api/v1/client/registerClient';
 // const URL = 'http://localhost:8080/api/v1/client/registerClient';
 ```
 
@@ -83,7 +83,7 @@ Endpoints called by the frontend today include (all under `/api/v1`):
 ## Prerequisites
 
 - Node.js 18+ and npm
-- A running instance of the Sabi-Connect backend (local or the hosted one above) if you want authenticated flows to work
+- A running instance of the GuildWorkman backend (local or the hosted one above) if you want authenticated flows to work
 
 ## Setup
 

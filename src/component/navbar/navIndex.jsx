@@ -21,7 +21,7 @@ const NavBar = () => {
     return (
         <div className={style.nav}>
             <div className={style.navA}>
-                <p >SabiConnect</p>
+                <p >GuildWorkman</p>
             </div>
 
             <div className={style.nav2}>

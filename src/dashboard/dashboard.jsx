@@ -33,7 +33,7 @@ const ProfileLayout = () => {
     return (
         <div className={styles.profileContainer}>
             <aside className={styles.sidebar}>
-                <h2 className={styles.logo}>SabiConnect</h2>
+                <h2 className={styles.logo}>GuildWorkman</h2>
                 <nav>
                     <ul className={styles.navList}>
                         <li className={`${styles.navItem}`}>
