@@ -82,13 +82,6 @@ export const ROUTE = [
         path:"/appMan",
         element: <AppointmentManager/>
     },
-    {
-        path:"/appMan",
-        element: <AppointmentManager/>
-    },
-    {
-
-    }
 
 ]
 
