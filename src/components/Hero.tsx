@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
@@ -105,12 +106,18 @@ export default function Hero() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 max-w-md">
-          <img src="/assets/fashiondesigner.jpg" alt="Fashion Designer" className="rounded-lg object-cover h-32 w-full" />
-          <img src="/assets/Skill.png" alt="Skill" className="rounded-lg object-cover h-32 w-full" />
-          <img src="/assets/hairstylist.jpg" alt="Hairstylist" className="rounded-lg object-cover h-32 w-full" />
-          <img src="/assets/barber.jpg" alt="Barber" className="rounded-lg object-cover h-32 w-full" />
-          <img src="/assets/plumb1.jpeg" alt="Plumber" className="rounded-lg object-cover h-32 w-full" />
+        <div className="grid grid-cols-3 gap-2 w-full max-w-md">
+          {[
+            { src: "/assets/fashiondesigner.jpg", alt: "Fashion Designer" },
+            { src: "/assets/Skill.png", alt: "Skill" },
+            { src: "/assets/hairstylist.jpg", alt: "Hairstylist" },
+            { src: "/assets/barber.jpg", alt: "Barber" },
+            { src: "/assets/plumb1.jpeg", alt: "Plumber" },
+          ].map((image) => (
+            <div key={image.src} className="relative h-32 w-full rounded-lg overflow-hidden">
+              <Image src={image.src} alt={image.alt} fill className="object-cover" sizes="(max-width: 768px) 33vw, 160px" />
+            </div>
+          ))}
         </div>
       </div>
 
