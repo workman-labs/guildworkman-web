@@ -1,61 +1,43 @@
 {
-  "name": "guildworkman-web",
+  "name": "guildworkman-web-next",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
   "dependencies": {
-    "@emotion/react": "^11.13.0",
-    "@emotion/styled": "^11.13.0",
-    "@fortawesome/fontawesome-free": "^6.6.0",
-    "@heroicons/react": "^2.1.5",
-    "@mui/icons-material": "^5.16.6",
-    "@mui/material": "^5.16.6",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "@heroicons/react": "^2.2.0",
+    "@mui/icons-material": "^9.2.0",
+    "@mui/material": "^9.2.0",
+    "@mui/material-nextjs": "^9.1.1",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.18.1",
-    "dotenv": "^16.4.5",
-    "formik": "^2.4.6",
+    "formik": "^2.4.9",
     "leaflet": "^1.9.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-dropzone": "^14.2.3",
-    "react-hook-form": "^7.53.0",
-    "react-icons": "^5.2.1",
-    "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.30.4",
-    "react-scripts": "^5.0.1",
-    "toposort": "^2.0.2",
-    "web-vitals": "^2.1.4",
-    "webpack": "^5.94.0",
-    "yup": "^1.4.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "next": "16.2.10",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-dropzone": "^15.0.0",
+    "react-hook-form": "^7.81.0",
+    "react-icons": "^5.7.0",
+    "react-leaflet": "^5.0.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/plugin-transform-private-property-in-object": "^7.24.7"
+    "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
