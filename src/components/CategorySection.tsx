@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { HiArrowRight } from "react-icons/hi";
 
 interface CategoryCard {
@@ -33,7 +34,15 @@ export default function CategorySection() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {categoryCards.map((card) => (
           <div key={card.title} className="border rounded-lg p-4 text-center">
-            <img src={card.image} alt={card.title} className="h-20 w-full object-contain mb-2" />
+            <div className="relative h-20 w-full mb-2">
+              <Image
+                src={card.image}
+                alt={card.title}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+            </div>
             <p className="font-medium">{card.title}</p>
             <button
               className="text-sm text-blue-600 inline-flex items-center gap-1 mt-1"
