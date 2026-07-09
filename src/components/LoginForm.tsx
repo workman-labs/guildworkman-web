@@ -2,17 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
 import { Formik, ErrorMessage as FormikErrorMessage } from "formik";
 import * as Yup from "yup";
-import { HiArrowLeft } from "react-icons/hi";
+import { HiArrowLeft, HiEye, HiEyeOff } from "react-icons/hi";
 import { loginApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/types";
 import type { UserType } from "@/lib/types";
+import Button from "./ui/Button";
+import Input from "./ui/Input";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -21,12 +18,6 @@ const validationSchema = Yup.object().shape({
     .required("Email Address is required"),
   password: Yup.string().required("Password is required"),
 });
-
-const roundedStyle = {
-  "& .MuiOutlinedInput-root": {
-    borderRadius: "9999px",
-  },
-};
 
 export default function LoginForm() {
   const router = useRouter();
@@ -39,110 +30,121 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (!errorMessage) return;
-    const timer = setTimeout(() => setErrorMessage(""), 3000);
+    const timer = setTimeout(() => setErrorMessage(""), 4000);
     return () => clearTimeout(timer);
   }, [errorMessage]);
 
   return (
-    <div>
-      <div className="fixed top-14 right-5 m-10 p-5 h-full z-50">
-        {errorMessage && (
-          <div className="bg-white text-xl text-red-700 p-5 h-20 rounded-xl shadow-md">
-            {errorMessage}
-          </div>
-        )}
+    <div className="min-h-[calc(100vh-64px)] grid lg:grid-cols-2">
+      <div className="relative hidden lg:flex flex-col justify-between bg-ink-900 text-cream p-12 overflow-hidden">
+        <button onClick={() => router.push("/")} className="flex items-center gap-1 text-ink-100 hover:text-cream w-fit">
+          <HiArrowLeft /> Back to home
+        </button>
+        <div>
+          <p className="font-heading text-3xl leading-snug max-w-sm">
+            &ldquo;Verified skill, honest pay, real trust.&rdquo;
+          </p>
+          <p className="mt-4 text-ink-300 text-sm">
+            GuildWorkman connects clients with skilled tradespeople they can
+            count on.
+          </p>
+        </div>
+        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-brand-700/30" />
       </div>
-      <Formik
-        initialValues={{ email: "", password: "" }}
-        validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          setLoading(true);
-          setErrorMessage("");
 
-          try {
-            const response = await loginApi(values, userType);
-            const { token, refreshToken, userId } = response.data.data;
-            localStorage.setItem("accessToken", token);
-            localStorage.setItem("refreshToken", refreshToken);
-            localStorage.setItem("userId", userId);
-            router.push("/book");
-          } catch (error) {
-            setErrorMessage(getErrorMessage(error, "An unexpected error occurred."));
-          } finally {
-            setLoading(false);
-            setSubmitting(false);
-          }
-        }}
-      >
-        {({ values, handleChange, handleSubmit, isSubmitting }) => (
-          <div className="max-w-md mx-auto px-6 py-12">
-            <button onClick={() => router.push("/")} className="flex items-center gap-1 mb-6 text-slate-600">
-              <HiArrowLeft /> Back
-            </button>
-            <h2 className="text-2xl font-semibold mb-6">
-              Log in {userType === "worker" ? "as a skilled worker" : "as a client"}
-            </h2>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div>
-                <TextField
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  type="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  sx={roundedStyle}
-                />
-                <FormikErrorMessage name="email" component="div" className="text-red-500 text-sm" />
-              </div>
-              <div>
-                <TextField
-                  label="Password"
-                  variant="outlined"
-                  fullWidth
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  sx={roundedStyle}
-                />
-                <Button onClick={() => setShowPassword((s) => !s)}>
-                  {showPassword ? "Hide" : "Show"}
+      <div className="flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-sm">
+          <button onClick={() => router.push("/")} className="lg:hidden flex items-center gap-1 mb-8 text-ink-500">
+            <HiArrowLeft /> Back
+          </button>
+          <h1 className="font-heading text-3xl font-semibold">Welcome back</h1>
+          <p className="text-ink-500 mt-2 mb-8">
+            Log in {userType === "worker" ? "as a skilled worker" : "as a client"}
+          </p>
+
+          {errorMessage && (
+            <div className="mb-4 bg-error/10 text-error text-sm p-3 rounded-xl">{errorMessage}</div>
+          )}
+
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={async (values, { setSubmitting }) => {
+              setLoading(true);
+              setErrorMessage("");
+
+              try {
+                const response = await loginApi(values, userType);
+                const { token, refreshToken, userId } = response.data.data;
+                localStorage.setItem("accessToken", token);
+                localStorage.setItem("refreshToken", refreshToken);
+                localStorage.setItem("userId", userId);
+                router.push("/book");
+              } catch (error) {
+                setErrorMessage(getErrorMessage(error, "An unexpected error occurred."));
+              } finally {
+                setLoading(false);
+                setSubmitting(false);
+              }
+            }}
+          >
+            {({ values, handleChange, handleSubmit, isSubmitting }) => (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div>
+                  <Input
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                  />
+                  <FormikErrorMessage name="email" component="div" className="text-error text-xs mt-1" />
+                </div>
+                <div>
+                  <div className="relative">
+                    <Input
+                      label="Password"
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={values.password}
+                      onChange={handleChange}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((s) => !s)}
+                      className="absolute right-4 top-[38px] text-ink-500"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <HiEyeOff /> : <HiEye />}
+                    </button>
+                  </div>
+                  <FormikErrorMessage name="password" component="div" className="text-error text-xs mt-1" />
+                </div>
+
+                <label className="flex items-center gap-2 text-sm text-ink-700 mt-1">
+                  <input type="checkbox" className="rounded border-ink-300" />
+                  Remember me
+                </label>
+
+                <Button type="submit" className="w-full mt-2" disabled={loading || isSubmitting}>
+                  {loading ? "Logging in..." : "Log in"}
                 </Button>
-                <FormikErrorMessage name="password" component="div" className="text-red-500 text-sm" />
-              </div>
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: "#2b8fda",
-                  color: "white",
-                  paddingY: 2,
-                  borderRadius: "9999px",
-                  "&:hover": { backgroundColor: "#2b8fda" },
-                }}
-                disabled={loading || isSubmitting}
-              >
-                {loading ? "Loading..." : "Log in"}
-              </Button>
-            </form>
-            <FormGroup>
-              <FormControlLabel required control={<Checkbox />} label="Remember me" />
-            </FormGroup>
-            <p className="mt-4 text-sm">
-              Don&apos;t have an Account?{" "}
-              <button className="text-blue-600 underline mx-1" onClick={() => router.push("/client")}>
-                Signup as client
-              </button>
-              <button className="text-blue-600 underline mx-1" onClick={() => router.push("/skilWok")}>
-                Signup as worker
-              </button>
-            </p>
-          </div>
-        )}
-      </Formik>
+              </form>
+            )}
+          </Formik>
+
+          <p className="mt-6 text-sm text-ink-500">
+            Don&apos;t have an account?{" "}
+            <button className="text-brand-500 font-medium" onClick={() => router.push("/client")}>
+              Sign up as client
+            </button>{" "}
+            or{" "}
+            <button className="text-brand-500 font-medium" onClick={() => router.push("/skilWok")}>
+              sign up as worker
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,14 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
+import { HiSearch } from "react-icons/hi";
 import type { Map as LeafletMap } from "leaflet";
+import Button from "./ui/Button";
+import Card from "./ui/Card";
 
 interface NominatimResult {
   place_id: number;
@@ -18,6 +14,13 @@ interface NominatimResult {
   lon: string;
   display_name: string;
 }
+
+const collage = [
+  { src: "/assets/fashiondesigner.jpg", alt: "Fashion Designer" },
+  { src: "/assets/Skill.png", alt: "Skill" },
+  { src: "/assets/hairstylist.jpg", alt: "Hairstylist" },
+  { src: "/assets/barber.jpg", alt: "Barber" },
+];
 
 export default function Hero() {
   const router = useRouter();
@@ -85,70 +88,63 @@ export default function Hero() {
 
   return (
     <div>
-      <div id="map" className="h-[500px] w-full" />
-
-      <div className="flex flex-col md:flex-row items-center justify-between gap-8 px-6 py-12 max-w-6xl mx-auto">
-        <div className="max-w-xl">
-          <h1 className="text-4xl font-bold leading-tight">
-            Discover more than 5000{" "}
-            <span className="text-blue-600">skilled workers</span>
-          </h1>
-          <p className="mt-4 text-slate-600">
-            Great platform for job seekers searching for new career heights and passionate about
-            making people happy.
-          </p>
-          <Button
-            variant="contained"
-            sx={{ fontSize: "1.1rem", padding: "12px 24px", borderRadius: "8px", mt: 3 }}
-            onClick={() => router.push("/appoint")}
-          >
-            Discover Now
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 w-full max-w-md">
-          {[
-            { src: "/assets/fashiondesigner.jpg", alt: "Fashion Designer" },
-            { src: "/assets/Skill.png", alt: "Skill" },
-            { src: "/assets/hairstylist.jpg", alt: "Hairstylist" },
-            { src: "/assets/barber.jpg", alt: "Barber" },
-            { src: "/assets/plumb1.jpeg", alt: "Plumber" },
-          ].map((image) => (
-            <div key={image.src} className="relative h-32 w-full rounded-lg overflow-hidden">
-              <Image src={image.src} alt={image.alt} fill className="object-cover" sizes="(max-width: 768px) 33vw, 160px" />
+      <section className="bg-ink-900 text-cream">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <span className="inline-block bg-gold-100 text-gold-600 text-xs font-semibold uppercase tracking-wide rounded-full px-3 py-1 mb-5">
+              Trusted local trades
+            </span>
+            <h1 className="font-heading text-4xl md:text-5xl font-semibold leading-[1.1]">
+              Find skilled workers <span className="text-brand-300">you can trust</span>
+            </h1>
+            <p className="mt-5 text-ink-100 text-lg max-w-md leading-relaxed">
+              Discover more than 5,000 electricians, plumbers, stylists and
+              other tradespeople — book with confidence and get the job done
+              right.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button size="lg" onClick={() => router.push("/appoint")}>
+                Discover Now
+              </Button>
+              <Button variant="outline-inverse" size="lg" onClick={() => router.push("/skilWok")}>
+                Join as a worker
+              </Button>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      <div className="max-w-md mx-auto px-6 pb-12">
-        <Paper
-          component="form"
-          onSubmit={handleSearch}
-          sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-        >
-          <IconButton sx={{ p: "10px" }} aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search for a location"
-            inputProps={{ "aria-label": "search locations" }}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-          <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        </Paper>
+          <div className="grid grid-cols-2 grid-rows-2 gap-3 h-80 w-full">
+            {collage.map((image) => (
+              <div key={image.src} className="relative rounded-2xl overflow-hidden">
+                <Image src={image.src} alt={image.alt} fill priority className="object-cover" sizes="(max-width: 768px) 45vw, 260px" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-3xl mx-auto px-6 -mt-8 relative z-10">
+        <Card className="p-2">
+          <form onSubmit={handleSearch} className="flex items-center gap-2 px-3 py-2">
+            <HiSearch className="text-ink-300 text-xl shrink-0" />
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search for a location near you"
+              aria-label="search locations"
+              className="flex-1 outline-none text-ink-900 placeholder:text-ink-300 py-2"
+            />
+            <Button type="submit" size="sm">
+              Search
+            </Button>
+          </form>
+        </Card>
 
         {searchResults.length > 0 && (
-          <ul className="mt-2 divide-y divide-slate-200 bg-white rounded-md shadow">
+          <ul className="mt-2 divide-y divide-ink-100 bg-white rounded-xl shadow-lg overflow-hidden">
             {searchResults.map((result) => (
               <li
                 key={result.place_id}
-                className="p-2 text-sm cursor-pointer hover:bg-slate-50"
+                className="p-3 text-sm cursor-pointer hover:bg-cream-100"
                 onClick={() => handleLocationClick(result.lat, result.lon, result.display_name)}
               >
                 {result.display_name}
@@ -156,7 +152,9 @@ export default function Hero() {
             ))}
           </ul>
         )}
-      </div>
+      </section>
+
+      <div id="map" className="h-[400px] w-full mt-10" />
     </div>
   );
 }

@@ -9,13 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
     "@fortawesome/fontawesome-free": "^7.3.0",
     "@heroicons/react": "^2.2.0",
-    "@mui/icons-material": "^9.2.0",
-    "@mui/material": "^9.2.0",
-    "@mui/material-nextjs": "^9.1.1",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.18.1",
     "formik": "^2.4.9",

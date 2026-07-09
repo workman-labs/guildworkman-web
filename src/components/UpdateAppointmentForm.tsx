@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { updateAppointmentApi, viewAllAppointmentApi } from "@/lib/api";
 import type { Appointment } from "@/lib/types";
+import Card from "./ui/Card";
+import Badge from "./ui/Badge";
 
 export default function UpdateAppointmentForm() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -23,35 +25,41 @@ export default function UpdateAppointmentForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
-      <h2 className="text-2xl font-semibold mb-4">Update Appointment</h2>
+    <div className="max-w-2xl mx-auto px-6 py-16">
+      <h1 className="font-heading text-2xl font-semibold mb-6">Incoming appointment requests</h1>
       {appointments.length > 0 ? (
         <div className="flex flex-col gap-3">
           {appointments.map((app) => (
-            <div key={app.id} className="border rounded-lg p-3 flex items-center justify-between">
-              <span>
-                {app.title ?? app.category} on {app.date ?? app.scheduleTime}
-                {app.status && <span className="ml-2 text-slate-500">({app.status})</span>}
-              </span>
-              <div className="flex gap-2">
+            <Card key={app.id} className="p-4 flex items-center justify-between gap-4">
+              <div>
+                <p className="font-medium text-ink-900">
+                  {app.title ?? app.category} &middot; {app.date ?? app.scheduleTime}
+                </p>
+                {app.status && (
+                  <Badge tone="neutral" className="mt-1">
+                    {app.status}
+                  </Badge>
+                )}
+              </div>
+              <div className="flex gap-2 shrink-0">
                 <button
-                  className="bg-green-600 text-white rounded-full px-3 py-1 text-sm"
+                  className="bg-success text-cream rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
                   onClick={() => handleUpdate(app.id, "Accepted")}
                 >
                   Accept
                 </button>
                 <button
-                  className="bg-red-600 text-white rounded-full px-3 py-1 text-sm"
+                  className="bg-error text-cream rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
                   onClick={() => handleUpdate(app.id, "Declined")}
                 >
                   Decline
                 </button>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       ) : (
-        <p>No appointments available to update.</p>
+        <p className="text-ink-500">No appointments available to update.</p>
       )}
     </div>
   );

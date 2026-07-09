@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { cancelAppointmentApi, viewAllAppointmentApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/types";
 import type { Appointment } from "@/lib/types";
+import Select from "./ui/Select";
+import Card from "./ui/Card";
 
 export default function CancelAppointmentForm() {
   const router = useRouter();
@@ -44,29 +46,27 @@ export default function CancelAppointmentForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto px-6 py-12">
-      <h2 className="text-2xl font-semibold mb-4">Cancel Appointment</h2>
-      <select
-        className="border rounded px-3 py-2 w-full mb-4"
-        onChange={(e) => setId(e.target.value)}
-        defaultValue=""
-      >
-        <option value="">Select Appointment</option>
-        {appointments.map((app) => (
-          <option key={app.id} value={app.id}>
-            {app.title ?? app.category} on {app.date ?? app.scheduleTime}
-          </option>
-        ))}
-      </select>
-      <button
-        onClick={handleCancel}
-        disabled={loading || !id}
-        className="bg-red-600 text-white rounded-full px-4 py-2 disabled:opacity-50"
-      >
-        Cancel Appointment
-      </button>
-      {errorMessage && <p className="text-red-600 mt-2">{errorMessage}</p>}
-      {successMessage && <p className="text-green-600 mt-2">{successMessage}</p>}
+    <div className="max-w-md mx-auto px-6 py-16">
+      <h1 className="font-heading text-2xl font-semibold mb-6">Cancel an appointment</h1>
+      <Card className="p-6">
+        <Select label="Appointment" onChange={(e) => setId(e.target.value)} defaultValue="">
+          <option value="">Select an appointment</option>
+          {appointments.map((app) => (
+            <option key={app.id} value={app.id}>
+              {app.title ?? app.category} on {app.date ?? app.scheduleTime}
+            </option>
+          ))}
+        </Select>
+        <button
+          onClick={handleCancel}
+          disabled={loading || !id}
+          className="mt-4 w-full rounded-full bg-error text-cream py-2.5 font-medium disabled:opacity-40 hover:bg-error/90 transition-colors"
+        >
+          Cancel Appointment
+        </button>
+        {errorMessage && <p className="text-error text-sm mt-3">{errorMessage}</p>}
+        {successMessage && <p className="text-success text-sm mt-3">{successMessage}</p>}
+      </Card>
     </div>
   );
 }

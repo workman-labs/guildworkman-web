@@ -1,3 +1,6 @@
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
+
 interface Worker {
   name: string;
   experience: string;
@@ -40,19 +43,19 @@ export default async function WorkerProfilesPage({
   const title = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12 text-center">
-      <h1 className="text-2xl font-semibold mb-6">{title} Workers</h1>
+    <div className="max-w-2xl mx-auto px-6 py-16">
+      <h1 className="font-heading text-2xl font-semibold mb-6 text-center">{title} Workers</h1>
       {workers.length > 0 ? (
-        <ul className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {workers.map((worker, index) => (
-            <li key={index} className="border rounded-lg p-4">
-              <h3 className="font-medium">{worker.name}</h3>
-              <p className="text-slate-500">Experience: {worker.experience}</p>
-            </li>
+            <Card key={index} className="p-4 flex items-center justify-between">
+              <h3 className="font-medium text-ink-900">{worker.name}</h3>
+              <Badge tone="gold">{worker.experience} experience</Badge>
+            </Card>
           ))}
-        </ul>
+        </div>
       ) : (
-        <p>No workers available in this category.</p>
+        <p className="text-center text-ink-500">No workers available in this category.</p>
       )}
     </div>
   );

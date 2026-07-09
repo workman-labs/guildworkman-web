@@ -4,6 +4,9 @@ import { useState } from "react";
 import { viewAllAppointmentApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/types";
 import type { Appointment } from "@/lib/types";
+import Button from "./ui/Button";
+import Card from "./ui/Card";
+import Badge from "./ui/Badge";
 
 export default function ViewAllAppointments() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -25,29 +28,33 @@ export default function ViewAllAppointments() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
-      <h2 className="text-2xl font-semibold mb-4">All Appointments</h2>
-      <button onClick={handleViewAppointments} className="bg-blue-600 text-white rounded-full px-4 py-2 mb-4">
-        View All Appointments
-      </button>
+    <div className="max-w-2xl mx-auto px-6 py-16">
+      <h1 className="font-heading text-2xl font-semibold mb-6">All appointments</h1>
+      <Button onClick={handleViewAppointments} className="mb-6">
+        {loading ? "Loading..." : "View All Appointments"}
+      </Button>
 
-      {loading ? (
-        <p>Loading appointments...</p>
-      ) : error ? (
-        <p className="text-red-600">Error: {error}</p>
+      {error ? (
+        <p className="text-error text-sm">Error: {error}</p>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {appointments.length > 0 ? (
             appointments.map((app) => (
-              <li key={app.id} className="border rounded-lg p-3">
-                {app.title ?? app.category} on {app.date ?? app.scheduleTime}
-                {app.status && <span className="ml-2 text-slate-500">({app.status})</span>}
-              </li>
+              <Card key={app.id} className="p-4">
+                <p className="font-medium text-ink-900">
+                  {app.title ?? app.category} &middot; {app.date ?? app.scheduleTime}
+                </p>
+                {app.status && (
+                  <Badge tone="neutral" className="mt-1">
+                    {app.status}
+                  </Badge>
+                )}
+              </Card>
             ))
           ) : (
-            <li>No appointments available</li>
+            <p className="text-ink-500 text-sm">No appointments available.</p>
           )}
-        </ul>
+        </div>
       )}
     </div>
   );
