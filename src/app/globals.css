@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Warm, craft-oriented palette. Terracotta as the primary brand color
+     (trust + warmth, distinct from generic SaaS blue), warm charcoal
+     instead of pure gray for ink, cream instead of stark white. */
+  --color-cream: #fbf6ef;
+  --color-cream-100: #f5ede0;
+
+  --color-ink-900: #211c17;
+  --color-ink-700: #4a423a;
+  --color-ink-500: #756b60;
+  --color-ink-300: #b7ac9e;
+  --color-ink-100: #ede7dd;
+
+  --color-brand-50: #fdf3ec;
+  --color-brand-100: #fce8db;
+  --color-brand-300: #e8a679;
+  --color-brand-500: #c1622d;
+  --color-brand-600: #a34f22;
+  --color-brand-700: #82401b;
+
+  --color-gold-100: #f8ecd2;
+  --color-gold-500: #d9a441;
+  --color-gold-600: #b9862b;
+
+  --color-success: #3f7d58;
+  --color-error: #c1443d;
+
+  --background: var(--color-cream);
+  --foreground: var(--color-ink-900);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-cream: var(--color-cream);
+  --color-cream-100: var(--color-cream-100);
+
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-500: var(--color-ink-500);
+  --color-ink-300: var(--color-ink-300);
+  --color-ink-100: var(--color-ink-100);
+
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+
+  --color-gold-100: var(--color-gold-100);
+  --color-gold-500: var(--color-gold-500);
+  --color-gold-600: var(--color-gold-600);
+
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+
+  --font-heading: var(--font-fraunces);
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), Georgia, serif;
 }

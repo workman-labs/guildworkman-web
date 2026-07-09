@@ -3,6 +3,19 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
+import {
+  HiHome,
+  HiCalendar,
+  HiUser,
+  HiLockClosed,
+  HiMail,
+  HiQuestionMarkCircle,
+  HiUpload,
+} from "react-icons/hi";
+import Button from "./ui/Button";
+import Input from "./ui/Input";
+import Select from "./ui/Select";
+import Card from "./ui/Card";
 
 interface ProfileFormValues {
   fullName: string;
@@ -14,12 +27,12 @@ interface ProfileFormValues {
 }
 
 const navItems = [
-  { icon: "fa-home", label: "Dashboard" },
-  { icon: "fa-calendar-alt", label: "Appointment" },
-  { icon: "fa-user", label: "My Profile", active: true },
-  { icon: "fa-lock", label: "Login Details" },
-  { icon: "fa-envelope", label: "Message" },
-  { icon: "fa-question-circle", label: "Help" },
+  { icon: HiHome, label: "Dashboard" },
+  { icon: HiCalendar, label: "Appointment" },
+  { icon: HiUser, label: "My Profile", active: true },
+  { icon: HiLockClosed, label: "Login Details" },
+  { icon: HiMail, label: "Message" },
+  { icon: HiQuestionMarkCircle, label: "Help" },
 ];
 
 export default function ProfileForm() {
@@ -49,110 +62,108 @@ export default function ProfileForm() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-[70vh]">
-      <aside className="w-full md:w-56 bg-slate-900 text-white p-6">
-        <h2 className="text-lg font-semibold mb-6">GuildWorkman</h2>
+    <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)]">
+      <aside className="w-full md:w-64 bg-ink-900 text-cream p-6">
+        <h2 className="font-heading text-lg font-semibold mb-8">My Account</h2>
         <nav>
-          <ul className="flex flex-col gap-3 text-sm">
+          <ul className="flex flex-col gap-1 text-sm">
             {navItems.map((item) => (
               <li
                 key={item.label}
-                className={`flex items-center gap-2 ${item.active ? "text-blue-400 font-medium" : "text-slate-300"}`}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
+                  item.active ? "bg-brand-500 text-cream font-medium" : "text-ink-300 hover:bg-cream/5"
+                }`}
               >
-                <i className={`fas ${item.icon}`} /> {item.label}
+                <item.icon className="text-lg" /> {item.label}
               </li>
             ))}
           </ul>
         </nav>
       </aside>
 
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-semibold">Profile Information</h1>
-        <p className="text-slate-500 mb-4">Update your personal information below.</p>
+      <main className="flex-1 p-8 md:p-12 bg-cream-100">
+        <h1 className="font-heading text-2xl font-semibold">Profile Information</h1>
+        <p className="text-ink-500 mb-6">Update your personal information below.</p>
 
-        {successMessage && <p className="text-green-600 mb-4">Saved successfully!</p>}
+        {successMessage && (
+          <div className="mb-6 bg-success/10 text-success text-sm p-3 rounded-xl max-w-xl">
+            Saved successfully!
+          </div>
+        )}
 
-        <div className="max-w-xl">
+        <Card className="p-6 md:p-8 max-w-xl">
           <div
             {...getRootProps()}
-            className="border-2 border-dashed rounded-lg p-6 text-center mb-6 cursor-pointer"
+            className="border-2 border-dashed border-ink-100 rounded-2xl p-8 text-center mb-6 cursor-pointer hover:border-brand-300 transition-colors"
           >
             <input {...getInputProps()} />
             {profileImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={profileImage} alt="Profile" className="mx-auto h-32 w-32 object-cover rounded-full" />
-            ) : isDragActive ? (
-              <p>Drop the image here ...</p>
+              <img src={profileImage} alt="Profile" className="mx-auto h-28 w-28 object-cover rounded-full" />
             ) : (
-              <p>
-                Click to upload or drag and drop
-                <br />
-                SVG, PNG, JPG or GIF (max 400 x 400px)
-              </p>
+              <div className="flex flex-col items-center gap-2 text-ink-500">
+                <HiUpload className="text-3xl text-brand-500" />
+                {isDragActive ? (
+                  <p>Drop the image here...</p>
+                ) : (
+                  <p className="text-sm">
+                    Click to upload or drag and drop
+                    <br />
+                    SVG, PNG, JPG or GIF (max 400 x 400px)
+                  </p>
+                )}
+              </div>
             )}
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <label className="flex flex-col gap-1 text-sm">
-              Full Name *
-              <input
-                type="text"
+            <div>
+              <Input
+                label="Full Name *"
                 placeholder="Enter your full name"
-                className="border rounded px-3 py-2"
                 {...register("fullName", { required: "Full name is required" })}
               />
-              {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName.message}</p>}
-            </label>
+              {errors.fullName && <p className="text-error text-xs mt-1">{errors.fullName.message}</p>}
+            </div>
 
-            <label className="flex flex-col gap-1 text-sm">
-              Phone Number
-              <input
+            <div>
+              <Input
+                label="Phone Number"
                 type="tel"
                 placeholder="Enter your phone number"
-                className="border rounded px-3 py-2"
                 {...register("phoneNumber", { pattern: /^[0-9]+$/ })}
               />
-              {errors.phoneNumber && <p className="text-red-500 text-sm">Invalid phone number</p>}
-            </label>
+              {errors.phoneNumber && <p className="text-error text-xs mt-1">Invalid phone number</p>}
+            </div>
 
-            <label className="flex flex-col gap-1 text-sm">
-              Email *
-              <input
+            <div>
+              <Input
+                label="Email *"
                 type="email"
                 placeholder="Enter your email"
-                className="border rounded px-3 py-2"
                 {...register("email", { required: "Email is required" })}
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-            </label>
+              {errors.email && <p className="text-error text-xs mt-1">{errors.email.message}</p>}
+            </div>
 
-            <label className="flex flex-col gap-1 text-sm">
-              Date of Birth
-              <input type="date" className="border rounded px-3 py-2" {...register("dob")} />
-            </label>
+            <Input label="Date of Birth" type="date" {...register("dob")} />
 
-            <label className="flex flex-col gap-1 text-sm">
-              Gender
-              <select className="border rounded px-3 py-2" {...register("gender")}>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </label>
+            <Select label="Gender" {...register("gender")}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </Select>
 
-            <label className="flex flex-col gap-1 text-sm">
-              Account Type
-              <select className="border rounded px-3 py-2" {...register("accountType")}>
-                <option value="skilled-worker">Skilled Worker</option>
-                <option value="client">Client</option>
-              </select>
-            </label>
+            <Select label="Account Type" {...register("accountType")}>
+              <option value="skilled-worker">Skilled Worker</option>
+              <option value="client">Client</option>
+            </Select>
 
-            <button type="submit" className="bg-blue-600 text-white rounded-full py-2 mt-2">
+            <Button type="submit" className="mt-2">
               Save Changes
-            </button>
+            </Button>
           </form>
-        </div>
+        </Card>
       </main>
     </div>
   );
