@@ -50,7 +50,10 @@ export default async function WorkerProfilesPage({
           {workers.map((worker, index) => (
             <Card key={index} className="p-4 flex items-center justify-between">
               <h3 className="font-medium text-ink-900">{worker.name}</h3>
-              <Badge tone="gold">{worker.experience} experience</Badge>
+              <div className="flex gap-1.5">
+                <Badge tone="gold">{worker.experience} experience</Badge>
+                <Badge tone="chain">Escrow protected</Badge>
+              </div>
             </Card>
           ))}
         </div>

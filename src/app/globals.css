@@ -27,6 +27,12 @@
   --color-success: #3f7d58;
   --color-error: #c1443d;
 
+  /* Chain accent: deep indigo, reserved for on-chain/wallet touches
+     so they read as a distinct "trust tech" layer over the warm palette. */
+  --color-chain-100: #e7e4f4;
+  --color-chain-500: #564e9e;
+  --color-chain-600: #423a80;
+
   --background: var(--color-cream);
   --foreground: var(--color-ink-900);
 }
@@ -57,6 +63,10 @@
 
   --color-success: var(--color-success);
   --color-error: var(--color-error);
+
+  --color-chain-100: var(--color-chain-100);
+  --color-chain-500: var(--color-chain-500);
+  --color-chain-600: var(--color-chain-600);
 
   --font-heading: var(--font-fraunces);
   --font-sans: var(--font-inter);

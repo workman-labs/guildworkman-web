@@ -11,9 +11,10 @@ export default function SkillCard({ image, name, skill, description }: SkillDeta
       </div>
       <div>
         <p className="font-medium text-ink-900">{name}</p>
-        <Badge tone="brand" className="mt-1 mb-2">
-          {skill}
-        </Badge>
+        <div className="flex flex-wrap gap-1.5 mt-1 mb-2">
+          <Badge tone="brand">{skill}</Badge>
+          <Badge tone="chain">Escrow protected</Badge>
+        </div>
         <p className="text-sm text-ink-500">{description}</p>
       </div>
     </Card>

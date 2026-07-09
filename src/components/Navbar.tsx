@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { HiMenu, HiX } from "react-icons/hi";
 import Button from "./ui/Button";
+import WalletButton from "./WalletButton";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -34,6 +35,8 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
+          <WalletButton />
+          <span className="h-5 w-px bg-cream/15" />
           <Button variant="outline-inverse" size="sm" onClick={() => router.push("/login")}>
             Log in
           </Button>
@@ -69,6 +72,7 @@ export default function Navbar() {
             </button>
           ))}
           <div className="flex flex-col gap-2 mt-2">
+            <WalletButton variant="mobile" />
             <Button variant="outline-inverse" onClick={() => router.push("/login")}>
               Log in
             </Button>
