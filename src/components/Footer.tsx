@@ -35,8 +35,10 @@ export default function Footer() {
           </p>
         </div>
       </div>
-      <div className="border-t border-cream/10 px-6 py-6 text-center text-xs text-ink-500">
-        &copy; {new Date().getFullYear()} GuildWorkman
+      <div className="border-t border-cream/10 px-6 py-6 flex flex-col sm:flex-row items-center justify-center gap-2 text-center text-xs text-ink-500">
+        <span>&copy; {new Date().getFullYear()} GuildWorkman</span>
+        <span className="hidden sm:inline">&middot;</span>
+        <span>Escrow, reviews and rewards secured on Stellar</span>
       </div>
     </footer>
   );
