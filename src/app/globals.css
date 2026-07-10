@@ -81,3 +81,10 @@ body {
 h1, h2, h3, h4 {
   font-family: var(--font-heading), Georgia, serif;
 }
+
+/* Browsers don't give native <button> a pointer cursor by default (only
+   <a href> gets one) -- opt every button and explicit button-role element
+   in, site-wide, rather than adding cursor-pointer to each one by hand. */
+button:not(:disabled), [role="button"] {
+  cursor: pointer;
+}
