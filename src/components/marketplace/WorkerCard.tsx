@@ -55,7 +55,7 @@ export default function WorkerCard({ worker, variant = "stack" }: WorkerCardProp
           </div>
         </div>
         <Link
-          href="/book"
+          href={`/book/${worker.category}/${worker.id}`}
           className={buttonClasses("primary", "sm", "self-center")}
           aria-label={`Book ${worker.name}`}
         >
@@ -88,7 +88,7 @@ export default function WorkerCard({ worker, variant = "stack" }: WorkerCardProp
           </b>
         </span>
         <Link
-          href="/book"
+          href={`/book/${worker.category}/${worker.id}`}
           className={buttonClasses("primary", "sm")}
           aria-label={`Book ${worker.name}`}
         >

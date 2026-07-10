@@ -15,7 +15,7 @@ const workerData: Record<string, Worker[]> = {
     { name: "Bob Johnson", experience: "4 years" },
     { name: "Alice Davis", experience: "6 years" },
   ],
-  beauty_care: [
+  beauty: [
     { name: "Mary Brown", experience: "2 years" },
     { name: "Linda Miller", experience: "8 years" },
   ],

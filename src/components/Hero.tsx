@@ -61,8 +61,8 @@ export default function Hero() {
           </h1>
           <p className="mt-4 max-w-md text-lg text-muted">
             Book vetted electricians, plumbers, carpenters, stylists and more near
-            you — with <b className="font-semibold text-ink">on-chain escrow</b> and
-            ratings you can actually trust.
+            you — with <b className="font-semibold text-ink">on-chain escrow</b>
+            {" "}and ratings you can actually trust.
           </p>
 
           <form

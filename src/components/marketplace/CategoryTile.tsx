@@ -16,7 +16,7 @@ export default function CategoryTile({ category }: { category: CategoryMeta }) {
   const Icon = ICONS[category.key];
   return (
     <Link
-      href={`/book/${encodeURIComponent(category.apiCategory)}`}
+      href={`/book/${category.key}`}
       className="group flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 transition hover:-translate-y-0.5 hover:border-gold hover:shadow-float"
     >
       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy/8 text-navy-2">
