@@ -1,90 +1,121 @@
 @import "tailwindcss";
 
+/* ============================================================
+   GuildWorkman — Identity System v1
+   Trust navy (primary) · Guild gold (reputation) · Terracotta
+   (expressive / West-African market) on a warm sand ground.
+   Grotesque type (Inter), not serif. Light theme is the
+   primary, signed-off look.
+   ============================================================ */
+
 :root {
-  /* Warm, craft-oriented palette. Terracotta as the primary brand color
-     (trust + warmth, distinct from generic SaaS blue), warm charcoal
-     instead of pure gray for ink, cream instead of stark white. */
-  --color-cream: #fbf6ef;
-  --color-cream-100: #f5ede0;
+  /* grounds */
+  --sand: #fbf8f1;
+  --sand-2: #f3ecdf;
+  --surface: #ffffff;
 
-  --color-ink-900: #211c17;
-  --color-ink-700: #4a423a;
-  --color-ink-500: #756b60;
-  --color-ink-300: #b7ac9e;
-  --color-ink-100: #ede7dd;
+  /* ink + neutrals (slight warm/navy bias, never pure grey) */
+  --ink: #1c2233;
+  --muted: #6a6c7a;
+  --line: #e9e1d2;
+  --line-2: #efe9dc;
 
-  --color-brand-50: #fdf3ec;
-  --color-brand-100: #fce8db;
-  --color-brand-300: #e8a679;
-  --color-brand-500: #c1622d;
-  --color-brand-600: #a34f22;
-  --color-brand-700: #82401b;
+  /* navy — trust, primary actions, wordmark */
+  --navy: #1b2440;
+  --navy-2: #2a3a66;
+  --navy-ink: #141b33;
+  --navy-tint: #edf0f7;
 
-  --color-gold-100: #f8ecd2;
-  --color-gold-500: #d9a441;
-  --color-gold-600: #b9862b;
+  /* gold — reputation, the North Star, warm accents */
+  --gold: #e6a93c;
+  --gold-2: #f1c55e;
+  --gold-deep: #b9801f;
 
-  --color-success: #3f7d58;
-  --color-error: #c1443d;
+  /* terracotta — expressive voice, cultural mark, worker band */
+  --terra: #c24a2a;
+  --terra-2: #db5a31;
+  --terra-deep: #8f2f17;
 
-  /* Chain accent: deep indigo, reserved for on-chain/wallet touches
-     so they read as a distinct "trust tech" layer over the warm palette. */
-  --color-chain-100: #e7e4f4;
-  --color-chain-500: #564e9e;
-  --color-chain-600: #423a80;
+  /* semantic */
+  --ok: #2a7d5a;
+  --err: #c1443d;
 
-  --background: var(--color-cream);
-  --foreground: var(--color-ink-900);
+  --background: var(--sand);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-cream: var(--color-cream);
-  --color-cream-100: var(--color-cream-100);
+  --color-sand: var(--sand);
+  --color-sand-2: var(--sand-2);
+  --color-surface: var(--surface);
 
-  --color-ink-900: var(--color-ink-900);
-  --color-ink-700: var(--color-ink-700);
-  --color-ink-500: var(--color-ink-500);
-  --color-ink-300: var(--color-ink-300);
-  --color-ink-100: var(--color-ink-100);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
 
-  --color-brand-50: var(--color-brand-50);
-  --color-brand-100: var(--color-brand-100);
-  --color-brand-300: var(--color-brand-300);
-  --color-brand-500: var(--color-brand-500);
-  --color-brand-600: var(--color-brand-600);
-  --color-brand-700: var(--color-brand-700);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-navy-ink: var(--navy-ink);
+  --color-navy-tint: var(--navy-tint);
 
-  --color-gold-100: var(--color-gold-100);
-  --color-gold-500: var(--color-gold-500);
-  --color-gold-600: var(--color-gold-600);
+  --color-gold: var(--gold);
+  --color-gold-2: var(--gold-2);
+  --color-gold-deep: var(--gold-deep);
 
-  --color-success: var(--color-success);
-  --color-error: var(--color-error);
+  --color-terra: var(--terra);
+  --color-terra-2: var(--terra-2);
+  --color-terra-deep: var(--terra-deep);
 
-  --color-chain-100: var(--color-chain-100);
-  --color-chain-500: var(--color-chain-500);
-  --color-chain-600: var(--color-chain-600);
+  --color-ok: var(--ok);
+  --color-err: var(--err);
 
-  --font-heading: var(--font-fraunces);
+  /* legacy aliases — keep pre-existing pages compiling and roughly
+     on-brand while they're migrated to the new tokens above. */
+  --color-cream: var(--sand);
+  --color-cream-100: var(--sand-2);
+  --color-ink-900: var(--navy);
+  --color-ink-700: var(--navy-2);
+  --color-ink-500: var(--muted);
+  --color-ink-300: #a6a2ae;
+  --color-ink-100: var(--line);
+  --color-brand-50: #fbeee8;
+  --color-brand-100: #f6dfd5;
+  --color-brand-300: #e08a63;
+  --color-brand-500: var(--terra);
+  --color-brand-600: #a63d20;
+  --color-brand-700: var(--terra-deep);
+  --color-gold-100: #f7e7c6;
+  --color-gold-500: var(--gold);
+  --color-gold-600: var(--gold-deep);
+  --color-success: var(--ok);
+  --color-error: var(--err);
+  --color-chain-100: var(--navy-tint);
+  --color-chain-500: var(--navy-2);
+  --color-chain-600: var(--navy);
+
+  --font-heading: var(--font-inter);
   --font-sans: var(--font-inter);
+
+  --shadow-card: 0 1px 2px rgba(24, 28, 50, 0.05), 0 8px 20px -14px rgba(24, 28, 60, 0.24);
+  --shadow-float: 0 2px 4px rgba(24, 28, 50, 0.06), 0 26px 50px -26px rgba(24, 28, 70, 0.34);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Grotesque throughout — headings carry weight, not a serif switch. */
 h1, h2, h3, h4 {
-  font-family: var(--font-heading), Georgia, serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
-/* Browsers don't give native <button> a pointer cursor by default (only
-   <a href> gets one) -- opt every button and explicit button-role element
-   in, site-wide, rather than adding cursor-pointer to each one by hand. */
 button:not(:disabled), [role="button"] {
   cursor: pointer;
 }

@@ -1,88 +1,78 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { HiMenu, HiX } from "react-icons/hi";
-import Button from "./ui/Button";
-import WalletButton from "./WalletButton";
+import Logo from "./brand/Logo";
+import { buttonClasses } from "./ui/Button";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Browse skills", href: "/book" },
-  { label: "For clients", href: "/client" },
+  { label: "Browse trades", href: "/#categories" },
+  { label: "How it works", href: "/#how" },
+  { label: "For workers", href: "/skilWok" },
 ];
 
 export default function Navbar() {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-ink-900 text-cream">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <button
-          onClick={() => router.push("/")}
-          className="font-heading text-xl font-semibold tracking-tight"
-        >
-          GuildWorkman
-        </button>
+    <header className="sticky top-0 z-50 border-b border-line bg-sand/85 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-5 px-5 md:px-10">
+        <Link href="/" aria-label="GuildWorkman home">
+          <Logo className="text-lg text-ink" />
+        </Link>
 
-        <nav className="hidden lg:flex items-center gap-8 text-sm text-ink-100">
+        <nav className="ml-3 hidden items-center gap-7 text-sm font-semibold text-muted lg:flex">
           {navLinks.map((link) => (
-            <button key={link.href} onClick={() => router.push(link.href)} className="hover:text-cream transition-colors">
+            <Link key={link.href} href={link.href} className="transition hover:text-ink">
               {link.label}
-            </button>
+            </Link>
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-3">
-          <WalletButton />
-          <span className="h-5 w-px bg-cream/15" />
-          <Button variant="outline-inverse" size="sm" onClick={() => router.push("/login")}>
+        <div className="ml-auto hidden items-center gap-2 sm:flex">
+          <Link href="/login" className={buttonClasses("outline", "sm")}>
             Log in
-          </Button>
-          <Button variant="outline-inverse" size="sm" onClick={() => router.push("/skilWok")}>
-            Join as a worker
-          </Button>
-          <Button size="sm" onClick={() => router.push("/book")}>
-            Book now
-          </Button>
+          </Link>
+          <Link href="/client" className={buttonClasses("primary", "sm")}>
+            Sign up
+          </Link>
         </div>
 
         <button
-          className="lg:hidden text-2xl"
+          className="ml-auto text-2xl text-ink sm:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
         >
           {open ? <HiX /> : <HiMenu />}
         </button>
       </div>
 
-      {open && (
-        <div className="lg:hidden border-t border-cream/10 px-6 py-4 flex flex-col gap-3">
-          {navLinks.map((link) => (
-            <button
-              key={link.href}
-              onClick={() => {
-                setOpen(false);
-                router.push(link.href);
-              }}
-              className="text-left py-1 text-ink-100"
-            >
-              {link.label}
-            </button>
-          ))}
-          <div className="flex flex-col gap-2 mt-2">
-            <WalletButton variant="mobile" />
-            <Button variant="outline-inverse" onClick={() => router.push("/login")}>
+      {open ? (
+        <div className="border-t border-line px-5 py-4 sm:hidden">
+          <nav className="flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="py-2 font-semibold text-ink"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="mt-3 flex flex-col gap-2">
+            <Link href="/login" onClick={() => setOpen(false)} className={buttonClasses("outline", "md")}>
               Log in
-            </Button>
-            <Button variant="outline-inverse" onClick={() => router.push("/skilWok")}>
-              Join as a worker
-            </Button>
-            <Button onClick={() => router.push("/book")}>Book now</Button>
+            </Link>
+            <Link href="/client" onClick={() => setOpen(false)} className={buttonClasses("primary", "md")}>
+              Sign up
+            </Link>
           </div>
         </div>
-      )}
+      ) : null}
     </header>
   );
 }
