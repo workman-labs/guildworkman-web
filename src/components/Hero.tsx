@@ -103,7 +103,12 @@ export default function Hero() {
               right.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" onClick={() => router.push("/appoint")}>
+              <Button
+                size="lg"
+                onClick={() =>
+                  document.getElementById("categories")?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
                 Discover Now
               </Button>
               <Button variant="outline-inverse" size="lg" onClick={() => router.push("/skilWok")}>
@@ -131,7 +136,7 @@ export default function Hero() {
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search for a location near you"
               aria-label="search locations"
-              className="flex-1 outline-none text-ink-900 placeholder:text-ink-300 py-2"
+              className="flex-1 min-w-0 outline-none text-ink-900 placeholder:text-ink-300 py-2"
             />
             <Button type="submit" size="sm">
               Search
