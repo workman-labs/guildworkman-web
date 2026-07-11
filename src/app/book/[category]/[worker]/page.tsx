@@ -1,6 +1,6 @@
 import Stepper from "@/components/booking/Stepper";
 import BookingScreen from "@/components/booking/BookingScreen";
-import { FEATURED_WORKERS, CATEGORIES } from "@/lib/marketplace";
+import { getWorkerById, getCategory, WORKERS } from "@/lib/marketplace";
 import { getServices, buildDates, TIME_SLOTS } from "@/lib/booking";
 
 export default async function BookWorkerPage({
@@ -11,9 +11,8 @@ export default async function BookWorkerPage({
   const { category, worker: workerId } = await params;
 
   // Illustrative lookup — falls back so any id renders during the redesign.
-  const worker = FEATURED_WORKERS.find((w) => w.id === workerId) ?? FEATURED_WORKERS[0];
-  const categoryLabel =
-    CATEGORIES.find((c) => c.key === worker.category)?.label ?? "Pro";
+  const worker = getWorkerById(workerId) ?? WORKERS[0];
+  const categoryLabel = getCategory(worker.category)?.label ?? "Pro";
   const services = getServices(worker.category, worker.trade);
   const dates = buildDates(7);
 

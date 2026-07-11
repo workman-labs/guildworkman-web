@@ -1,65 +1,66 @@
-import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa6";
+import Stepper from "@/components/booking/Stepper";
+import FilterBar from "@/components/booking/FilterBar";
+import WorkerBrowseRow from "@/components/booking/WorkerBrowseRow";
+import { buttonClasses } from "@/components/ui/Button";
+import { getCategory, getWorkersByCategory, type CategoryKey } from "@/lib/marketplace";
 
-interface Worker {
-  name: string;
-  experience: string;
-}
-
-const workerData: Record<string, Worker[]> = {
-  electrical: [
-    { name: "John Doe", experience: "5 years" },
-    { name: "Jane Smith", experience: "3 years" },
-  ],
-  plumbing: [
-    { name: "Bob Johnson", experience: "4 years" },
-    { name: "Alice Davis", experience: "6 years" },
-  ],
-  beauty: [
-    { name: "Mary Brown", experience: "2 years" },
-    { name: "Linda Miller", experience: "8 years" },
-  ],
-  carpentry: [
-    { name: "James Wilson", experience: "10 years" },
-    { name: "Patricia Garcia", experience: "5 years" },
-  ],
-  fashion: [
-    { name: "Robert Martinez", experience: "7 years" },
-    { name: "Jennifer Lopez", experience: "4 years" },
-  ],
-  photography: [
-    { name: "Michael Anderson", experience: "3 years" },
-    { name: "Elizabeth Taylor", experience: "6 years" },
-  ],
+const PLURAL: Record<CategoryKey, string> = {
+  electrical: "Electricians",
+  plumbing: "Plumbers",
+  beauty: "Beauty pros",
+  carpentry: "Carpenters",
+  fashion: "Fashion designers",
+  photography: "Photographers",
 };
 
-export default async function WorkerProfilesPage({
+const AREA = "Yaba, Lagos";
+
+export default async function BrowseCategoryPage({
   params,
 }: {
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-  const workers = workerData[category] ?? [];
-  const title = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+  const meta = getCategory(category);
+  if (!meta) notFound();
+
+  const workers = getWorkersByCategory(meta.key);
+  const heading = PLURAL[meta.key];
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      <h1 className="font-heading text-2xl font-semibold mb-6 text-center">{title} Workers</h1>
-      {workers.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          {workers.map((worker, index) => (
-            <Card key={index} className="p-4 flex items-center justify-between">
-              <h3 className="font-medium text-ink-900">{worker.name}</h3>
-              <div className="flex gap-1.5">
-                <Badge tone="gold">{worker.experience} experience</Badge>
-                <Badge tone="chain">Escrow protected</Badge>
-              </div>
-            </Card>
+    <>
+      <Stepper
+        steps={[
+          { label: `Trade · ${meta.label}`, state: "done" },
+          { label: "Choose a pro", state: "current" },
+          { label: "Book & pay", state: "todo" },
+        ]}
+      />
+      <div className="mx-auto max-w-5xl px-5 pb-16 pt-6 md:px-10">
+        <Link href="/book" className="mb-3 inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-ink">
+          <FaArrowLeft aria-hidden className="text-xs" /> All trades
+        </Link>
+
+        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{heading} near you</h1>
+        <p className="mb-4 mt-1 text-muted">
+          <b className="font-bold text-ink tabular-nums">{meta.count} pros</b> available in {AREA}
+        </p>
+
+        <FilterBar area="Yaba" />
+
+        <div className="grid gap-3">
+          {workers.map((w) => (
+            <WorkerBrowseRow key={w.id} worker={w} />
           ))}
         </div>
-      ) : (
-        <p className="text-center text-ink-500">No workers available in this category.</p>
-      )}
-    </div>
+
+        <div className="mt-6 text-center">
+          <button className={buttonClasses("outline", "md")}>Show more pros</button>
+        </div>
+      </div>
+    </>
   );
 }
