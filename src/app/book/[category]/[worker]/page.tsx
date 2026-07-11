@@ -12,7 +12,9 @@ export default async function BookWorkerPage({
 
   // Illustrative lookup — falls back so any id renders during the redesign.
   const worker = getWorkerById(workerId) ?? WORKERS[0];
-  const categoryLabel = getCategory(worker.category)?.label ?? "Pro";
+  const meta = getCategory(worker.category);
+  const categoryLabel = meta?.label ?? "Pro";
+  const apiCategory = meta?.apiCategory ?? worker.category.toUpperCase();
   const services = getServices(worker.category, worker.trade);
   const dates = buildDates(7);
 
@@ -27,6 +29,7 @@ export default async function BookWorkerPage({
       />
       <BookingScreen
         worker={worker}
+        apiCategory={apiCategory}
         backHref={`/book/${category}`}
         services={services}
         dates={dates}
