@@ -23,7 +23,7 @@ export interface CategoryMeta {
 export const CATEGORIES: CategoryMeta[] = [
   { key: "electrical", label: "Electrical", apiCategory: "ELECTRICAL", count: 320, fromPrice: 8000 },
   { key: "plumbing", label: "Plumbing", apiCategory: "PLUMBING", count: 210, fromPrice: 6000 },
-  { key: "beauty", label: "Beauty Care", apiCategory: "BEAUTY CARE", count: 540, fromPrice: 3500 },
+  { key: "beauty", label: "Beauty Care", apiCategory: "BEAUTY_CARE", count: 540, fromPrice: 3500 },
   { key: "carpentry", label: "Carpentry", apiCategory: "CARPENTRY", count: 180, fromPrice: 12000 },
   { key: "fashion", label: "Fashion", apiCategory: "FASHION", count: 260, fromPrice: 15000 },
   { key: "photography", label: "Photography", apiCategory: "PHOTOGRAPHY", count: 140, fromPrice: 20000 },

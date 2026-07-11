@@ -63,7 +63,7 @@ export default function ProfileForm() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)]">
-      <aside className="w-full md:w-64 bg-ink-900 text-cream p-6">
+      <aside className="w-full md:w-64 bg-navy text-white p-6">
         <h2 className="font-heading text-lg font-semibold mb-8">My Account</h2>
         <nav>
           <ul className="flex flex-col gap-1 text-sm">
@@ -71,7 +71,7 @@ export default function ProfileForm() {
               <li
                 key={item.label}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
-                  item.active ? "bg-brand-500 text-cream font-medium" : "text-ink-300 hover:bg-cream/5"
+                  item.active ? "bg-terra text-white font-medium" : "text-white/70 hover:bg-white/5"
                 }`}
               >
                 <item.icon className="text-lg" /> {item.label}
@@ -81,12 +81,12 @@ export default function ProfileForm() {
         </nav>
       </aside>
 
-      <main className="flex-1 p-8 md:p-12 bg-cream-100">
+      <main className="flex-1 p-8 md:p-12 bg-sand-2">
         <h1 className="font-heading text-2xl font-semibold">Profile Information</h1>
-        <p className="text-ink-500 mb-6">Update your personal information below.</p>
+        <p className="text-muted mb-6">Update your personal information below.</p>
 
         {successMessage && (
-          <div className="mb-6 bg-success/10 text-success text-sm p-3 rounded-xl max-w-xl">
+          <div className="mb-6 bg-ok/10 text-ok text-sm p-3 rounded-xl max-w-xl">
             Saved successfully!
           </div>
         )}
@@ -94,15 +94,15 @@ export default function ProfileForm() {
         <Card className="p-6 md:p-8 max-w-xl">
           <div
             {...getRootProps()}
-            className="border-2 border-dashed border-ink-100 rounded-2xl p-8 text-center mb-6 cursor-pointer hover:border-brand-300 transition-colors"
+            className="border-2 border-dashed border-line rounded-2xl p-8 text-center mb-6 cursor-pointer hover:border-navy-2 transition-colors"
           >
             <input {...getInputProps()} />
             {profileImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={profileImage} alt="Profile" className="mx-auto h-28 w-28 object-cover rounded-full" />
             ) : (
-              <div className="flex flex-col items-center gap-2 text-ink-500">
-                <HiUpload className="text-3xl text-brand-500" />
+              <div className="flex flex-col items-center gap-2 text-muted">
+                <HiUpload className="text-3xl text-terra" />
                 {isDragActive ? (
                   <p>Drop the image here...</p>
                 ) : (
@@ -123,7 +123,7 @@ export default function ProfileForm() {
                 placeholder="Enter your full name"
                 {...register("fullName", { required: "Full name is required" })}
               />
-              {errors.fullName && <p className="text-error text-xs mt-1">{errors.fullName.message}</p>}
+              {errors.fullName && <p className="text-err text-xs mt-1">{errors.fullName.message}</p>}
             </div>
 
             <div>
@@ -133,7 +133,7 @@ export default function ProfileForm() {
                 placeholder="Enter your phone number"
                 {...register("phoneNumber", { pattern: /^[0-9]+$/ })}
               />
-              {errors.phoneNumber && <p className="text-error text-xs mt-1">Invalid phone number</p>}
+              {errors.phoneNumber && <p className="text-err text-xs mt-1">Invalid phone number</p>}
             </div>
 
             <div>
@@ -143,7 +143,7 @@ export default function ProfileForm() {
                 placeholder="Enter your email"
                 {...register("email", { required: "Email is required" })}
               />
-              {errors.email && <p className="text-error text-xs mt-1">{errors.email.message}</p>}
+              {errors.email && <p className="text-err text-xs mt-1">{errors.email.message}</p>}
             </div>
 
             <Input label="Date of Birth" type="date" {...register("dob")} />

@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -12,11 +13,15 @@ import {
 import NorthStar from "@/components/brand/NorthStar";
 import RatingPill from "@/components/marketplace/RatingPill";
 import { buttonClasses } from "@/components/ui/Button";
+import { bookingApi } from "@/lib/api";
+import { getErrorMessage } from "@/lib/types";
 import { formatNaira, type Worker } from "@/lib/marketplace";
 import { feeFor, type Service, type DateChip, type TimeSlot } from "@/lib/booking";
 
 interface Props {
   worker: Worker;
+  /** API category enum, e.g. "ELECTRICAL" — sent to bookAppointment. */
+  apiCategory: string;
   backHref: string;
   services: Service[];
   dates: DateChip[];
@@ -25,11 +30,13 @@ interface Props {
 
 export default function BookingScreen({
   worker,
+  apiCategory,
   backHref,
   services,
   dates,
   timeSlots,
 }: Props) {
+  const router = useRouter();
   const firstOpenDate = dates.find((d) => !d.disabled) ?? dates[0];
   const firstOpenTime = timeSlots.find((s) => !s.off)?.t ?? timeSlots[0].t;
 
@@ -37,17 +44,46 @@ export default function BookingScreen({
   const [dateIso, setDateIso] = useState(firstOpenDate.iso);
   const [time, setTime] = useState(firstOpenTime);
   const [booked, setBooked] = useState<null | { ref: string }>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const service = services.find((s) => s.id === serviceId) ?? services[0];
   const selectedDate = dates.find((d) => d.iso === dateIso) ?? firstOpenDate;
   const fee = feeFor(service.price);
   const total = service.price + fee;
 
-  function pay() {
-    // Integration point: call bookAppointment({ scheduleTime, category, clientId })
-    // and open the Soroban escrow contract here. Stubbed for the redesign.
-    setBooked({ ref: `GW-${Math.floor(1000 + Math.random() * 9000)}` });
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  async function pay() {
+    setError("");
+
+    // clientId comes from the login flow (localStorage "userId").
+    const clientId =
+      typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    if (!clientId || clientId === "undefined") {
+      router.push("/login?as=client");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Combine the picked date + slot into the datetime the API expects.
+      const scheduleTime = `${dateIso}T${time}`;
+      const res = await bookingApi({ scheduleTime, category: apiCategory, clientId });
+
+      if (res.status) {
+        // NOTE: Soroban escrow contract call still to come — the funds
+        // aren't actually locked on-chain yet, only the appointment is booked.
+        setBooked({ ref: `GW-${Math.floor(1000 + Math.random() * 9000)}` });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        throw new Error(res.data?.error ?? "We couldn't confirm your booking. Please try again.");
+      }
+    } catch (e) {
+      setError(
+        getErrorMessage(e, "We couldn't reach the booking service. Please try again in a moment.")
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (booked) {
@@ -252,9 +288,20 @@ export default function BookingScreen({
             </div>
 
             <div className="px-[18px] pb-[18px]">
-              <button onClick={pay} className={buttonClasses("primary", "lg", "w-full")}>
-                Pay {formatNaira(total)} into escrow
+              <button
+                onClick={pay}
+                disabled={loading}
+                className={buttonClasses("primary", "lg", "w-full")}
+              >
+                {loading
+                  ? "Confirming your booking…"
+                  : `Pay ${formatNaira(total)} into escrow`}
               </button>
+              {error ? (
+                <p role="alert" className="mt-2.5 text-center text-sm font-semibold text-err">
+                  {error}
+                </p>
+              ) : null}
               <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-xs text-muted">
                 <NorthStar size={13} color="var(--gold-deep)" /> Secured on Stellar · Free
                 cancellation until {worker.name.split(" ")[0]} accepts

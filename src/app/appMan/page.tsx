@@ -3,7 +3,7 @@ import CancelAppointmentForm from "@/components/CancelAppointmentForm";
 
 export default function AppointmentManagerPage() {
   return (
-    <div className="divide-y divide-ink-100">
+    <div className="divide-y divide-line">
       <BookAppointmentForm />
       <CancelAppointmentForm />
     </div>

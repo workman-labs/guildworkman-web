@@ -10,12 +10,12 @@ export default function SkillCard({ image, name, skill, description }: SkillDeta
         <Image src={image} alt={name} fill className="object-cover" sizes="80px" />
       </div>
       <div>
-        <p className="font-medium text-ink-900">{name}</p>
+        <p className="font-medium text-ink">{name}</p>
         <div className="flex flex-wrap gap-1.5 mt-1 mb-2">
           <Badge tone="brand">{skill}</Badge>
           <Badge tone="chain">Escrow protected</Badge>
         </div>
-        <p className="text-sm text-ink-500">{description}</p>
+        <p className="text-sm text-muted">{description}</p>
       </div>
     </Card>
   );

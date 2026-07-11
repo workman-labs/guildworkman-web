@@ -17,11 +17,11 @@ export default function AppointmentHub() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
-      <span className="inline-block bg-brand-100 text-brand-700 text-xs font-semibold uppercase tracking-wide rounded-full px-3 py-1 mb-4">
+      <span className="inline-block bg-terra/10 text-terra-deep text-xs font-semibold uppercase tracking-wide rounded-full px-3 py-1 mb-4">
         Appointments
       </span>
       <h1 className="font-heading text-3xl font-semibold">Manage your bookings</h1>
-      <p className="text-ink-500 mt-2 mb-10">Everything you need in one place.</p>
+      <p className="text-muted mt-2 mb-10">Everything you need in one place.</p>
 
       <div className="grid sm:grid-cols-2 gap-6">
         {actions.map((action) => (
@@ -31,7 +31,7 @@ export default function AppointmentHub() {
             </div>
             <div className="p-6 flex flex-col flex-1">
               <h3 className="font-heading text-lg font-semibold">{action.label}</h3>
-              <p className="text-ink-500 text-sm mt-1 mb-4 flex-1">{action.copy}</p>
+              <p className="text-muted text-sm mt-1 mb-4 flex-1">{action.copy}</p>
               <Button variant="secondary" onClick={() => router.push(action.path)} className="w-fit">
                 {action.label}
               </Button>
