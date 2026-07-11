@@ -10,16 +10,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id ?? props.name;
     return (
       <label className="flex flex-col gap-1.5 text-sm" htmlFor={inputId}>
-        {label && <span className="font-medium text-ink-700">{label}</span>}
+        {label && <span className="font-medium text-ink">{label}</span>}
         <input
           ref={ref}
           id={inputId}
-          className={`rounded-xl border px-4 py-3 text-ink-900 placeholder:text-ink-300 bg-white outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-100 ${
-            error ? "border-error" : "border-ink-100"
+          className={`rounded-xl border px-4 py-3 text-ink placeholder:text-muted bg-white outline-none transition-colors focus:border-navy-2 focus:ring-2 focus:ring-navy/15 ${
+            error ? "border-err" : "border-line"
           } ${className}`}
           {...props}
         />
-        {error && <span className="text-error text-xs">{error}</span>}
+        {error && <span className="text-err text-xs">{error}</span>}
       </label>
     );
   }

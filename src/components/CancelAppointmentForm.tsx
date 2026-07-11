@@ -60,12 +60,12 @@ export default function CancelAppointmentForm() {
         <button
           onClick={handleCancel}
           disabled={loading || !id}
-          className="mt-4 w-full rounded-full bg-error text-cream py-2.5 font-medium disabled:opacity-40 hover:bg-error/90 transition-colors"
+          className="mt-4 w-full rounded-full bg-err text-white py-2.5 font-medium disabled:opacity-40 hover:bg-err/90 transition-colors"
         >
           Cancel Appointment
         </button>
-        {errorMessage && <p className="text-error text-sm mt-3">{errorMessage}</p>}
-        {successMessage && <p className="text-success text-sm mt-3">{successMessage}</p>}
+        {errorMessage && <p className="text-err text-sm mt-3">{errorMessage}</p>}
+        {successMessage && <p className="text-ok text-sm mt-3">{successMessage}</p>}
       </Card>
     </div>
   );

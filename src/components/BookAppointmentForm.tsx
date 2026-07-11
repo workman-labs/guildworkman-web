@@ -69,7 +69,7 @@ export default function BookAppointmentForm() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16">
       <h1 className="font-heading text-3xl font-semibold mb-1">Book an appointment</h1>
-      <p className="text-ink-500 mb-8">Pick a category, then a date and time that works.</p>
+      <p className="text-muted mb-8">Pick a category, then a date and time that works.</p>
 
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-52 shrink-0">
@@ -101,14 +101,14 @@ export default function BookAppointmentForm() {
                 onChange={(e) => setDateTime(e.target.value)}
               />
               <Input label="Category" value={currentCategory} readOnly placeholder="Select a category above" />
-              {errorMessage && <p className="text-error text-sm">{errorMessage}</p>}
-              {successMessage && <p className="text-success text-sm">{successMessage}</p>}
+              {errorMessage && <p className="text-err text-sm">{errorMessage}</p>}
+              {successMessage && <p className="text-ok text-sm">{successMessage}</p>}
               <Button type="submit" disabled={loading}>
                 {loading ? "Booking..." : "Book Appointment"}
               </Button>
             </form>
           </Card>
-          <button onClick={() => router.push("/")} className="mt-4 text-ink-500 underline text-sm">
+          <button onClick={() => router.push("/")} className="mt-4 text-muted underline text-sm">
             Back to Home
           </button>
         </div>

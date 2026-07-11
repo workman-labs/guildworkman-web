@@ -32,7 +32,7 @@ export default function UpdateAppointmentForm() {
           {appointments.map((app) => (
             <Card key={app.id} className="p-4 flex items-center justify-between gap-4">
               <div>
-                <p className="font-medium text-ink-900">
+                <p className="font-medium text-ink">
                   {app.title ?? app.category} &middot; {app.date ?? app.scheduleTime}
                 </p>
                 {app.status && (
@@ -43,13 +43,13 @@ export default function UpdateAppointmentForm() {
               </div>
               <div className="flex gap-2 shrink-0">
                 <button
-                  className="bg-success text-cream rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
+                  className="bg-ok text-white rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
                   onClick={() => handleUpdate(app.id, "Accepted")}
                 >
                   Accept
                 </button>
                 <button
-                  className="bg-error text-cream rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
+                  className="bg-err text-white rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
                   onClick={() => handleUpdate(app.id, "Declined")}
                 >
                   Decline
@@ -59,7 +59,7 @@ export default function UpdateAppointmentForm() {
           ))}
         </div>
       ) : (
-        <p className="text-ink-500">No appointments available to update.</p>
+        <p className="text-muted">No appointments available to update.</p>
       )}
     </div>
   );

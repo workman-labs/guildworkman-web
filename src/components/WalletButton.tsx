@@ -30,7 +30,7 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
   }, []);
 
   const baseButton =
-    "inline-flex items-center gap-2 rounded-full border border-cream/40 px-4 py-1.5 text-sm text-cream hover:bg-cream/10 transition-colors";
+    "inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-sm text-white hover:bg-white/10 transition-colors";
 
   if (address) {
     return (
@@ -39,23 +39,23 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
           onClick={() => setOpen((o) => !o)}
           className={`${baseButton} ${variant === "mobile" ? "w-full justify-between" : ""}`}
         >
-          <span className="h-2 w-2 rounded-full bg-success shrink-0" />
+          <span className="h-2 w-2 rounded-full bg-ok shrink-0" />
           {truncateAddress(address)}
           <HiChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
         {open && (
-          <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white text-ink-900 shadow-lg border border-ink-100 overflow-hidden z-50">
-            <div className="px-4 py-3 border-b border-ink-100">
-              <p className="text-xs text-ink-500">Connected to</p>
+          <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white text-ink shadow-lg border border-line overflow-hidden z-50">
+            <div className="px-4 py-3 border-b border-line">
+              <p className="text-xs text-muted">Connected to</p>
               <p className="text-sm font-medium">{network ? NETWORK_LABELS[network] ?? network : "Stellar"}</p>
-              <p className="text-xs text-ink-500 mt-1 break-all">{address}</p>
+              <p className="text-xs text-muted mt-1 break-all">{address}</p>
             </div>
             <button
               onClick={() => {
                 disconnect();
                 setOpen(false);
               }}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error hover:bg-error/5"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-err hover:bg-err/5"
             >
               <HiLogout /> Disconnect
             </button>
@@ -76,7 +76,7 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
         {connecting ? "Connecting..." : "Connect Wallet"}
       </button>
       {freighterMissing && (
-        <p className={`text-xs text-gold-500 mt-2 ${variant === "navbar" ? "absolute right-0 w-48 text-right" : ""}`}>
+        <p className={`text-xs text-gold-deep mt-2 ${variant === "navbar" ? "absolute right-0 w-48 text-right" : ""}`}>
           Freighter wallet not found.{" "}
           <a href="https://www.freighter.app/" target="_blank" rel="noreferrer" className="underline">
             Install it
@@ -85,7 +85,7 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
         </p>
       )}
       {error && !freighterMissing && (
-        <p className={`text-xs text-error mt-2 ${variant === "navbar" ? "absolute right-0 w-48 text-right" : ""}`}>
+        <p className={`text-xs text-err mt-2 ${variant === "navbar" ? "absolute right-0 w-48 text-right" : ""}`}>
           {error}
         </p>
       )}

@@ -36,34 +36,34 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] grid lg:grid-cols-2">
-      <div className="relative hidden lg:flex flex-col justify-between bg-ink-900 text-cream p-12 overflow-hidden">
-        <button onClick={() => router.push("/")} className="flex items-center gap-1 text-ink-100 hover:text-cream w-fit">
+      <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
+        <button onClick={() => router.push("/")} className="flex items-center gap-1 text-white/70 hover:text-white w-fit">
           <HiArrowLeft /> Back to home
         </button>
         <div>
           <p className="font-heading text-3xl leading-snug max-w-sm">
             &ldquo;Verified skill, honest pay, real trust.&rdquo;
           </p>
-          <p className="mt-4 text-ink-300 text-sm">
+          <p className="mt-4 text-white/70 text-sm">
             GuildWorkman connects clients with skilled tradespeople they can
             count on.
           </p>
         </div>
-        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-brand-700/30" />
+        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-terra-deep/30" />
       </div>
 
       <div className="flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
-          <button onClick={() => router.push("/")} className="lg:hidden flex items-center gap-1 mb-8 text-ink-500">
+          <button onClick={() => router.push("/")} className="lg:hidden flex items-center gap-1 mb-8 text-muted">
             <HiArrowLeft /> Back
           </button>
           <h1 className="font-heading text-3xl font-semibold">Welcome back</h1>
-          <p className="text-ink-500 mt-2 mb-8">
+          <p className="text-muted mt-2 mb-8">
             Log in {userType === "worker" ? "as a skilled worker" : "as a client"}
           </p>
 
           {errorMessage && (
-            <div className="mb-4 bg-error/10 text-error text-sm p-3 rounded-xl">{errorMessage}</div>
+            <div className="mb-4 bg-err/10 text-err text-sm p-3 rounded-xl">{errorMessage}</div>
           )}
 
           <Formik
@@ -98,7 +98,7 @@ export default function LoginForm() {
                     value={values.email}
                     onChange={handleChange}
                   />
-                  <FormikErrorMessage name="email" component="div" className="text-error text-xs mt-1" />
+                  <FormikErrorMessage name="email" component="div" className="text-err text-xs mt-1" />
                 </div>
                 <div>
                   <div className="relative">
@@ -112,17 +112,17 @@ export default function LoginForm() {
                     <button
                       type="button"
                       onClick={() => setShowPassword((s) => !s)}
-                      className="absolute right-4 top-[38px] text-ink-500"
+                      className="absolute right-4 top-[38px] text-muted"
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <HiEyeOff /> : <HiEye />}
                     </button>
                   </div>
-                  <FormikErrorMessage name="password" component="div" className="text-error text-xs mt-1" />
+                  <FormikErrorMessage name="password" component="div" className="text-err text-xs mt-1" />
                 </div>
 
-                <label className="flex items-center gap-2 text-sm text-ink-700 mt-1">
-                  <input type="checkbox" className="rounded border-ink-300" />
+                <label className="flex items-center gap-2 text-sm text-ink mt-1">
+                  <input type="checkbox" className="rounded border-line" />
                   Remember me
                 </label>
 
@@ -133,13 +133,13 @@ export default function LoginForm() {
             )}
           </Formik>
 
-          <p className="mt-6 text-sm text-ink-500">
+          <p className="mt-6 text-sm text-muted">
             Don&apos;t have an account?{" "}
-            <button className="text-brand-500 font-medium" onClick={() => router.push("/client")}>
+            <button className="text-terra font-medium" onClick={() => router.push("/client")}>
               Sign up as client
             </button>{" "}
             or{" "}
-            <button className="text-brand-500 font-medium" onClick={() => router.push("/skilWok")}>
+            <button className="text-terra font-medium" onClick={() => router.push("/skilWok")}>
               sign up as worker
             </button>
           </p>

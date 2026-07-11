@@ -45,28 +45,28 @@ export default function SignupForm({ userType }: SignupFormProps) {
 
   return (
     <div className="min-h-[calc(100vh-64px)] grid lg:grid-cols-2">
-      <div className="relative hidden lg:flex flex-col justify-between bg-ink-900 text-cream p-12 overflow-hidden">
-        <button onClick={() => router.push("/")} className="flex items-center gap-1 text-ink-100 hover:text-cream w-fit">
+      <div className="relative hidden lg:flex flex-col justify-between bg-navy text-white p-12 overflow-hidden">
+        <button onClick={() => router.push("/")} className="flex items-center gap-1 text-white/70 hover:text-white w-fit">
           <HiArrowLeft /> Back to home
         </button>
         <div>
           <p className="font-heading text-3xl leading-snug max-w-sm">&ldquo;{quotes[userType]}&rdquo;</p>
         </div>
-        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-brand-700/30" />
+        <div className="absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-terra-deep/30" />
       </div>
 
       <div className="flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
-          <button onClick={() => router.push("/")} className="lg:hidden flex items-center gap-1 mb-8 text-ink-500">
+          <button onClick={() => router.push("/")} className="lg:hidden flex items-center gap-1 mb-8 text-muted">
             <HiArrowLeft /> Back
           </button>
           <h1 className="font-heading text-3xl font-semibold">
             Join as a {userType === "worker" ? "skilled worker" : "client"}
           </h1>
-          <p className="text-ink-500 mt-2 mb-8">Create your GuildWorkman account.</p>
+          <p className="text-muted mt-2 mb-8">Create your GuildWorkman account.</p>
 
           {message && (
-            <div className={`mb-4 text-sm p-3 rounded-xl ${isError ? "bg-error/10 text-error" : "bg-success/10 text-success"}`}>
+            <div className={`mb-4 text-sm p-3 rounded-xl ${isError ? "bg-err/10 text-err" : "bg-ok/10 text-ok"}`}>
               {message}
             </div>
           )}
@@ -93,22 +93,22 @@ export default function SignupForm({ userType }: SignupFormProps) {
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div>
                   <Input label="Full name" type="text" name="fullName" value={values.fullName} onChange={handleChange} />
-                  <FormikErrorMessage name="fullName" component="div" className="text-error text-xs mt-1" />
+                  <FormikErrorMessage name="fullName" component="div" className="text-err text-xs mt-1" />
                 </div>
                 <div>
                   <Input label="Email" type="email" name="email" value={values.email} onChange={handleChange} />
-                  <FormikErrorMessage name="email" component="div" className="text-error text-xs mt-1" />
+                  <FormikErrorMessage name="email" component="div" className="text-err text-xs mt-1" />
                 </div>
                 <div>
                   <Input label="Password" type="password" name="password" value={values.password} onChange={handleChange} />
-                  <FormikErrorMessage name="password" component="div" className="text-error text-xs mt-1" />
+                  <FormikErrorMessage name="password" component="div" className="text-err text-xs mt-1" />
                 </div>
 
                 <Button type="submit" className="w-full mt-2" disabled={isSubmitting}>
                   Sign up as a {userType === "worker" ? "worker" : "client"}
                 </Button>
 
-                <p className="text-xs text-ink-500">
+                <p className="text-xs text-muted">
                   By signing up, you agree to our{" "}
                   <span className="underline">Terms of Service</span> and{" "}
                   <span className="underline">Privacy Policy</span>.
@@ -117,10 +117,10 @@ export default function SignupForm({ userType }: SignupFormProps) {
             )}
           </Formik>
 
-          <p className="mt-6 text-sm text-ink-500">
+          <p className="mt-6 text-sm text-muted">
             Already have an account?{" "}
             <button
-              className="text-brand-500 font-medium"
+              className="text-terra font-medium"
               onClick={() => router.push(userType === "worker" ? "/login?as=worker" : "/login")}
             >
               Log in

@@ -35,13 +35,13 @@ export default function ViewAllAppointments() {
       </Button>
 
       {error ? (
-        <p className="text-error text-sm">Error: {error}</p>
+        <p className="text-err text-sm">Error: {error}</p>
       ) : (
         <div className="flex flex-col gap-3">
           {appointments.length > 0 ? (
             appointments.map((app) => (
               <Card key={app.id} className="p-4">
-                <p className="font-medium text-ink-900">
+                <p className="font-medium text-ink">
                   {app.title ?? app.category} &middot; {app.date ?? app.scheduleTime}
                 </p>
                 {app.status && (
@@ -52,7 +52,7 @@ export default function ViewAllAppointments() {
               </Card>
             ))
           ) : (
-            <p className="text-ink-500 text-sm">No appointments available.</p>
+            <p className="text-muted text-sm">No appointments available.</p>
           )}
         </div>
       )}
