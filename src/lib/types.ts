@@ -36,13 +36,36 @@ export interface BookAppointmentRequest {
   clientId: string;
 }
 
+/** Backend wraps most responses as ApiResponse { data, status }. */
+export interface ApiEnvelope<T> {
+  data: T;
+  status: boolean;
+}
+
+/** Mirrors guildworkman-api's AppointmentStatus enum. */
+export type AppointmentStatus =
+  | "ACCEPTED"
+  | "DECLINED"
+  | "SCHEDULED"
+  | "CANCELLED"
+  | "UPDATED";
+
+/** What the current viewAllAppointment endpoint actually returns — a single
+    record with just these two fields. A full list (id, status, worker,
+    amount) is pending a backend change; see the appointments-API spec. */
+export interface ViewAllAppointmentsResponse {
+  scheduleTime: string;
+  category: string;
+}
+
+/** Richer domain shape the redesigned account screens will use once the
+    backend returns it. Not yet populated by the live API. */
 export interface Appointment {
   id: number;
-  title?: string;
-  date?: string;
   scheduleTime?: string;
   category?: string;
-  status?: string;
+  status?: AppointmentStatus;
+  amount?: number;
 }
 
 export interface BookAppointmentResponse {
@@ -55,13 +78,13 @@ export interface BookAppointmentResponse {
   };
 }
 
-export interface CancelAppointmentRequest {
-  id: number;
-}
-
+/** PUT body for updateAppointment; the id travels in the `appointmentId`
+    query param, not the body. */
 export interface UpdateAppointmentRequest {
-  id: number;
-  status: string;
+  status: AppointmentStatus;
+  clientId?: string;
+  amount?: number;
+  startTime?: string;
 }
 
 export interface ApiErrorResponse {

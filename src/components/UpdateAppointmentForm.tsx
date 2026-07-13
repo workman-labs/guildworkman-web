@@ -1,66 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { updateAppointmentApi, viewAllAppointmentApi } from "@/lib/api";
-import type { Appointment } from "@/lib/types";
+import { useState } from "react";
+import { updateAppointmentApi } from "@/lib/api";
+import { getErrorMessage, type AppointmentStatus } from "@/lib/types";
 import Card from "./ui/Card";
-import Badge from "./ui/Badge";
+import Input from "./ui/Input";
 
 export default function UpdateAppointmentForm() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [id, setId] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState<AppointmentStatus | null>(null);
 
-  useEffect(() => {
-    const clientId = localStorage.getItem("userId");
-    if (!clientId) return;
-    viewAllAppointmentApi(clientId).then(setAppointments).catch(() => setAppointments([]));
-  }, []);
-
-  const handleUpdate = async (id: number, status: string) => {
-    setAppointments((prev) => prev.map((app) => (app.id === id ? { ...app, status } : app)));
+  const respond = async (status: AppointmentStatus) => {
+    const appointmentId = Number(id);
+    if (!appointmentId) {
+      setMessage("Enter a valid appointment id.");
+      return;
+    }
+    setBusy(status);
+    setMessage("");
     try {
-      await updateAppointmentApi({ id, status });
+      await updateAppointmentApi(appointmentId, { status });
+      setMessage(`Appointment ${status.toLowerCase()}.`);
     } catch (error) {
-      console.error("Error updating appointment:", error);
+      setMessage(getErrorMessage(error, "Error updating appointment."));
+    } finally {
+      setBusy(null);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-16">
-      <h1 className="font-heading text-2xl font-semibold mb-6">Incoming appointment requests</h1>
-      {appointments.length > 0 ? (
-        <div className="flex flex-col gap-3">
-          {appointments.map((app) => (
-            <Card key={app.id} className="p-4 flex items-center justify-between gap-4">
-              <div>
-                <p className="font-medium text-ink">
-                  {app.title ?? app.category} &middot; {app.date ?? app.scheduleTime}
-                </p>
-                {app.status && (
-                  <Badge tone="neutral" className="mt-1">
-                    {app.status}
-                  </Badge>
-                )}
-              </div>
-              <div className="flex gap-2 shrink-0">
-                <button
-                  className="bg-ok text-white rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
-                  onClick={() => handleUpdate(app.id, "Accepted")}
-                >
-                  Accept
-                </button>
-                <button
-                  className="bg-err text-white rounded-full px-4 py-1.5 text-sm font-medium hover:opacity-90"
-                  onClick={() => handleUpdate(app.id, "Declined")}
-                >
-                  Decline
-                </button>
-              </div>
-            </Card>
-          ))}
+    <div className="max-w-md mx-auto px-6 py-16">
+      <h1 className="font-heading text-2xl font-semibold mb-2">Respond to a request</h1>
+      <p className="text-muted text-sm mb-6">
+        Enter the appointment id, then accept or decline. The incoming-requests list
+        returns once the API provides appointment ids (see the appointments-API spec).
+      </p>
+      <Card className="p-6">
+        <Input
+          label="Appointment id"
+          type="number"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          placeholder="e.g. 1024"
+        />
+        <div className="mt-4 flex gap-2">
+          <button
+            className="flex-1 rounded-full bg-ok px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40"
+            disabled={!id || busy !== null}
+            onClick={() => respond("ACCEPTED")}
+          >
+            {busy === "ACCEPTED" ? "Accepting..." : "Accept"}
+          </button>
+          <button
+            className="flex-1 rounded-full bg-err px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40"
+            disabled={!id || busy !== null}
+            onClick={() => respond("DECLINED")}
+          >
+            {busy === "DECLINED" ? "Declining..." : "Decline"}
+          </button>
         </div>
-      ) : (
-        <p className="text-muted">No appointments available to update.</p>
-      )}
+        {message && <p className="mt-3 text-sm text-muted">{message}</p>}
+      </Card>
     </div>
   );
 }
