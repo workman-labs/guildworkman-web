@@ -45,7 +45,8 @@ export const clientSignupApi = (userData: RegistrationRequest) =>
 export const bookingApi = (userData: BookAppointmentRequest) =>
   postJson<BookAppointmentResponse>("/api/v1/client/bookAppointment", userData);
 
-/* Appointment management — shapes matched to guildworkman-api:
+/* Appointment management — shapes matched to the backend
+   (guildworkman-core -> backend-api):
    - cancel/update are PUT with the id in the `appointmentId` query param
    - delete is DELETE with the id in query + a { appointment_Id } body
    - all wrap their payload in ApiResponse { data, status }
