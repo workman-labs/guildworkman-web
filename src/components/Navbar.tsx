@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { HiMenu, HiX } from "react-icons/hi";
 import Logo from "./brand/Logo";
+import ThemeToggle from "./ThemeToggle";
 import { buttonClasses } from "./ui/Button";
 
 const navLinks = [
@@ -31,6 +32,7 @@ export default function Navbar() {
         </nav>
 
         <div className="ml-auto hidden items-center gap-2 sm:flex">
+          <ThemeToggle />
           <Link href="/login" className={buttonClasses("outline", "sm")}>
             Log in
           </Link>
@@ -39,14 +41,17 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <button
-          className="ml-auto text-2xl text-ink sm:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          {open ? <HiX /> : <HiMenu />}
-        </button>
+        <div className="ml-auto flex items-center gap-2 sm:hidden">
+          <ThemeToggle />
+          <button
+            className="text-2xl text-ink"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((o) => !o)}
+          >
+            {open ? <HiX /> : <HiMenu />}
+          </button>
+        </div>
       </div>
 
       {open ? (

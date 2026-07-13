@@ -9,7 +9,7 @@ export default function CategoryButton({ categoryName, active, onClick }: Catego
     <button
       onClick={onClick}
       className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium mb-2 transition-colors ${
-        active ? "bg-navy text-white" : "bg-white border border-line text-ink hover:border-navy-2"
+        active ? "bg-navy text-white" : "bg-surface border border-line text-ink hover:border-navy-2"
       }`}
     >
       {categoryName}
