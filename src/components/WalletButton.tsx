@@ -44,7 +44,7 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
           <HiChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
         {open && (
-          <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white text-ink shadow-lg border border-line overflow-hidden z-50">
+          <div className="absolute right-0 mt-2 w-56 rounded-xl bg-surface text-ink shadow-lg border border-line overflow-hidden z-50">
             <div className="px-4 py-3 border-b border-line">
               <p className="text-xs text-muted">Connected to</p>
               <p className="text-sm font-medium">{network ? NETWORK_LABELS[network] ?? network : "Stellar"}</p>

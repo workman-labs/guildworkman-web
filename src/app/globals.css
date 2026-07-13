@@ -42,6 +42,63 @@
 
   --background: var(--sand);
   --foreground: var(--ink);
+  color-scheme: light;
+}
+
+/* ============================================================
+   Dark theme. Flip the neutrals + the few brand tokens that need
+   it for legibility on dark; navy/gold/terra grounds stay constant.
+   System default via prefers-color-scheme; a stored preference
+   stamps data-theme on <html> and wins in both directions.
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sand: #11141f;
+    --sand-2: #171b29;
+    --surface: #1a1e2c;
+    --ink: #eceae3;
+    --muted: #9a9cac;
+    --line: #2a3145;
+    --line-2: #232839;
+    --navy-2: #8da0d4;
+    --navy-tint: #212b4a;
+    --gold-deep: #e9b457;
+    --ok: #3e9e72;
+    --err: #e06a5e;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --sand: #11141f;
+  --sand-2: #171b29;
+  --surface: #1a1e2c;
+  --ink: #eceae3;
+  --muted: #9a9cac;
+  --line: #2a3145;
+  --line-2: #232839;
+  --navy-2: #8da0d4;
+  --navy-tint: #212b4a;
+  --gold-deep: #e9b457;
+  --ok: #3e9e72;
+  --err: #e06a5e;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --sand: #fbf8f1;
+  --sand-2: #f3ecdf;
+  --surface: #ffffff;
+  --ink: #1c2233;
+  --muted: #6a6c7a;
+  --line: #e9e1d2;
+  --line-2: #efe9dc;
+  --navy-2: #2a3a66;
+  --navy-tint: #edf0f7;
+  --gold-deep: #b9801f;
+  --ok: #2a7d5a;
+  --err: #c1443d;
+  color-scheme: light;
 }
 
 @theme inline {

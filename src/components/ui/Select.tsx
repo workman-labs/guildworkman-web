@@ -13,7 +13,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           id={selectId}
-          className={`rounded-xl border border-line px-4 py-3 text-ink bg-white outline-none transition-colors focus:border-navy-2 focus:ring-2 focus:ring-navy/15 ${className}`}
+          className={`rounded-xl border border-line px-4 py-3 text-ink bg-surface outline-none transition-colors focus:border-navy-2 focus:ring-2 focus:ring-navy/15 ${className}`}
           {...props}
         >
           {children}
