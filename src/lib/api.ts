@@ -1,23 +1,27 @@
 import axios from "axios";
 import { API_BASE_URL } from "./config";
 import type {
-  Appointment,
+  ApiEnvelope,
   AuthApiResponse,
   BookAppointmentRequest,
   BookAppointmentResponse,
-  CancelAppointmentRequest,
   LoginRequest,
   RegistrationRequest,
   RegistrationResponse,
   UpdateAppointmentRequest,
   UserType,
+  ViewAllAppointmentsResponse,
 } from "./types";
 
-async function postJson<TResponse>(path: string, body: unknown): Promise<TResponse> {
+async function requestJson<TResponse>(
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  path: string,
+  body?: unknown
+): Promise<TResponse> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
-    method: "POST",
+    method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: body === undefined ? undefined : JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -30,21 +34,8 @@ async function postJson<TResponse>(path: string, body: unknown): Promise<TRespon
   return response.json();
 }
 
-async function getJson<TResponse>(path: string): Promise<TResponse> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `HTTP error! status: ${response.status}, message: ${errorData.message ?? "unknown error"}`
-    );
-  }
-
-  return response.json();
-}
+const postJson = <T>(path: string, body: unknown) => requestJson<T>("POST", path, body);
+const getJson = <T>(path: string) => requestJson<T>("GET", path);
 
 // --- Client ---
 
@@ -54,20 +45,38 @@ export const clientSignupApi = (userData: RegistrationRequest) =>
 export const bookingApi = (userData: BookAppointmentRequest) =>
   postJson<BookAppointmentResponse>("/api/v1/client/bookAppointment", userData);
 
-export const cancelAppointmentApi = (userData: CancelAppointmentRequest) =>
-  postJson<{ message?: string; data?: { token: string; refreshToken: string } }>(
-    "/api/v1/client/cancelAppointment",
-    userData
-  );
-
-export const updateAppointmentApi = (userData: UpdateAppointmentRequest) =>
-  postJson<{ message?: string }>("/api/v1/client/updateAppointment", userData);
+/* Appointment management — shapes matched to guildworkman-api:
+   - cancel/update are PUT with the id in the `appointmentId` query param
+   - delete is DELETE with the id in query + a { appointment_Id } body
+   - all wrap their payload in ApiResponse { data, status }
+   NOTE: viewAllAppointment currently returns a SINGLE appointment
+   (scheduleTime + category, no id/status). A proper list is pending a
+   backend change — see the appointments-API spec in this PR. */
 
 export const viewAllAppointmentApi = (clientId: string) =>
-  getJson<Appointment[]>(`/api/v1/client/viewAllAppointment?clientId=${clientId}`);
+  getJson<ApiEnvelope<ViewAllAppointmentsResponse>>(
+    `/api/v1/client/viewAllAppointment?clientId=${encodeURIComponent(clientId)}`
+  );
 
-export const deleteAppointmentApi = (userData: { id: number }) =>
-  postJson<{ message?: string }>("/api/v1/client/deleteAppointment", userData);
+export const cancelAppointmentApi = (appointmentId: number) =>
+  requestJson<ApiEnvelope<unknown>>(
+    "PUT",
+    `/api/v1/client/cancelAppointment?appointmentId=${appointmentId}`
+  );
+
+export const updateAppointmentApi = (appointmentId: number, body: UpdateAppointmentRequest) =>
+  requestJson<ApiEnvelope<unknown>>(
+    "PUT",
+    `/api/v1/client/updateAppointment?appointmentId=${appointmentId}`,
+    body
+  );
+
+export const deleteAppointmentApi = (appointmentId: number) =>
+  requestJson<ApiEnvelope<unknown>>(
+    "DELETE",
+    `/api/v1/client/deleteAppointment?appointmentId=${appointmentId}`,
+    { appointment_Id: appointmentId }
+  );
 
 // --- Skilled worker ---
 
