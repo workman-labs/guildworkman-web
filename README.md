@@ -1,5 +1,7 @@
 # GuildWorkman Web
 
+**Live:** [guildworkman-web.vercel.app](https://guildworkman-web.vercel.app)
+
 The client-facing web app for **GuildWorkman** — a marketplace that connects
 clients with skilled tradespeople (electricians, plumbers, beauticians,
 carpenters, fashion designers, photographers, and more) for bookable,
@@ -184,11 +186,17 @@ broken images) done ad hoc during review rather than committed as a CI suite.
 
 ## Deployment
 
-Deployed on [Vercel](https://vercel.com) via its zero-config Next.js
-detection (no `vercel.json` needed) — the backend's CORS is scoped to
-`https://guildworkman.vercel.app/` on the endpoints that restrict origins.
-There's no GitHub Actions workflow in this repo yet; Vercel builds and
-previews are triggered directly from pushed branches/PRs.
+Live at **[guildworkman-web.vercel.app](https://guildworkman-web.vercel.app)**,
+deployed on [Vercel](https://vercel.com) via its zero-config Next.js detection
+(no `vercel.json` needed). Production builds from the `dev` branch; other
+branches/PRs get preview deployments. There's no GitHub Actions workflow in
+this repo — Vercel builds are triggered directly from pushed branches.
+
+> **Known CORS mismatch.** The backend's CORS is scoped to
+> `https://guildworkman.vercel.app/` on the endpoints that restrict origins —
+> which is **not** the live frontend origin above
+> (`https://guildworkman-web.vercel.app`). Browser calls to those endpoints can
+> be blocked in production until the backend allows the correct origin.
 
 ## Contributing
 
