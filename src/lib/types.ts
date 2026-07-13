@@ -42,7 +42,7 @@ export interface ApiEnvelope<T> {
   status: boolean;
 }
 
-/** Mirrors guildworkman-api's AppointmentStatus enum. */
+/** Mirrors the backend's AppointmentStatus enum. */
 export type AppointmentStatus =
   | "ACCEPTED"
   | "DECLINED"

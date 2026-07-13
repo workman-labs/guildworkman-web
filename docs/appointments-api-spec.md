@@ -1,7 +1,7 @@
-# Appointments API — backend spec (guildworkman-api)
+# Appointments API — backend spec (guildworkman-core / backend-api)
 
 **Status:** proposed · blocks the account/appointments redesign
-**Audience:** whoever owns `guildworkman-api`
+**Audience:** whoever owns the backend (`guildworkman-core` → `backend-api/`)
 
 ## Why
 

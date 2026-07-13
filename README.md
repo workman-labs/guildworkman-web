@@ -5,8 +5,8 @@ clients with skilled tradespeople (electricians, plumbers, beauticians,
 carpenters, fashion designers, photographers, and more) for bookable,
 in-person appointments. This is the Next.js frontend: it renders the public
 marketing site, handles client/worker registration and login, and drives the
-booking, cancellation, update, and review flows against
-[`guildworkman-api`](https://github.com/workman-labs/guildworkman-api).
+booking, cancellation, update, and review flows against the backend API in
+[`guildworkman-core`](https://github.com/workman-labs/guildworkman-core).
 
 ## Table of contents
 
@@ -28,13 +28,12 @@ booking, cancellation, update, and review flows against
 
 ## Project ecosystem
 
-GuildWorkman is split across three repositories, each with a different job:
+GuildWorkman lives in two repositories:
 
 | Repo | Role |
 |---|---|
 | **`guildworkman-web`** (this repo) | Next.js frontend — everything a client or worker sees and clicks. |
-| [`guildworkman-api`](https://github.com/workman-labs/guildworkman-api) | Spring Boot backend — auth, booking, payments (Paystack), email, and the Postgres-backed domain model. This repo talks to it over REST. |
-| [`guildworkman-contracts`](https://github.com/workman-labs/guildworkman-contracts) | Soroban (Stellar) smart contracts for on-chain escrow, reputation, and loyalty rewards. Not yet called from the backend — see [Web3 / Stellar touches](#web3--stellar-touches) below for what's live on the frontend today versus what's still ahead. |
+| [`guildworkman-core`](https://github.com/workman-labs/guildworkman-core) | The Spring Boot backend (`backend-api/`) — auth, booking, payments (Paystack), email, and the Postgres-backed domain model, which this repo talks to over REST — **and** the Soroban (Stellar) smart contracts (`soroban-contracts/`) for on-chain escrow, reputation, and loyalty rewards. The contracts aren't called from the backend yet — see [Web3 / Stellar touches](#web3--stellar-touches) below for what's live on the frontend today versus what's still ahead. |
 
 ## Tech stack
 
@@ -87,10 +86,11 @@ Colors and type are defined once as CSS custom properties in
 
 ## Web3 / Stellar touches
 
-`guildworkman-contracts` defines three Soroban contracts (`escrow`,
-`reputation`, `loyalty-token`), but per that repo's own README, **none of
-them are called from `guildworkman-api` yet** — that requires a Soroban RPC
-client and keypair handling in the Java backend that doesn't exist today.
+[`guildworkman-core`](https://github.com/workman-labs/guildworkman-core)'s
+`soroban-contracts/` defines three Soroban contracts (`escrow`, `reputation`,
+`loyalty-token`), but per its own README, **none of them are called from the
+backend yet** — that requires a Soroban RPC client and keypair handling in the
+Java backend that doesn't exist today.
 Rather than pretend that integration is further along than it is, the
 frontend currently does two honest things:
 
@@ -101,7 +101,7 @@ frontend currently does two honest things:
    the Freighter extension isn't installed, it shows an "Install Freighter"
    hint instead of failing silently. This makes **no contract calls** —
    booking, payment, and review logic are all unchanged and still go through
-   `guildworkman-api`/Paystack.
+   the backend API/Paystack.
 2. **An informational trust layer.** `src/components/TrustSection.tsx` on
    the homepage, plus "Escrow protected" badges on worker/skill listings,
    explain in plain language what the contracts *will* do (escrow-protected
@@ -132,15 +132,17 @@ public/
 All backend calls go through `src/lib/api.ts`, which reads the backend base
 URL from `NEXT_PUBLIC_API_BASE_URL` (see `src/lib/config.ts`; defaults to the
 hosted GuildWorkman API if unset). It wraps `fetch`/`axios` calls to
-`guildworkman-api`'s `/api/v1/client/*`, `/api/v1/skilledWorker/*`, and
-`/api/v1/auth/*` endpoints — see that repo's README for the full endpoint
-reference.
+the backend's `/api/v1/client/*`, `/api/v1/skilledWorker/*`, and
+`/api/v1/auth/*` endpoints — see
+[`backend-api/README`](https://github.com/workman-labs/guildworkman-core/blob/development/backend-api/README.md)
+for the full endpoint reference.
 
 ## Prerequisites
 
 - Node.js 18+ and npm
-- A running instance of [`guildworkman-api`](https://github.com/workman-labs/guildworkman-api)
-  (local or hosted) if you want authenticated flows to work
+- A running instance of the backend
+  ([`guildworkman-core`](https://github.com/workman-labs/guildworkman-core) →
+  `backend-api/`), local or hosted, if you want authenticated flows to work
 - The [Freighter](https://www.freighter.app/) browser extension if you want
   to try the wallet-connect button — the rest of the app works fine without it
 
@@ -183,7 +185,7 @@ broken images) done ad hoc during review rather than committed as a CI suite.
 ## Deployment
 
 Deployed on [Vercel](https://vercel.com) via its zero-config Next.js
-detection (no `vercel.json` needed) — `guildworkman-api`'s CORS is scoped to
+detection (no `vercel.json` needed) — the backend's CORS is scoped to
 `https://guildworkman.vercel.app/` on the endpoints that restrict origins.
 There's no GitHub Actions workflow in this repo yet; Vercel builds and
 previews are triggered directly from pushed branches/PRs.
