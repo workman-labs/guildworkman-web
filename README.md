@@ -105,8 +105,15 @@ The wordmark in the lockups is set in **Inter** (weight 800), matching the
 
 An **archive of the superseded identity exploration** (`workman-forge`,
 `workman-chevron`, `workman-seal`). These are "Workman Labs" wordmarks in an
-older steel-blue/amber palette — they are **not** the current brand and should
-never be used in the app. They're kept only for design reference.
+older steel-blue/amber palette — they are **not** the current GuildWorkman
+brand and should never be used in the app. They're kept only for design
+reference.
+
+The one live exception is `workman-labs-avatar.png` (512×512), the **GitHub
+org avatar** for [workman-labs](https://github.com/workman-labs). It's the
+chevron mark alone on an ink tile: the horizontal lockup is 2.5:1, so a square
+avatar crop would truncate it, and the wordmark is illegible at the ~20–40px
+sizes GitHub renders. It belongs to the org's identity, not the app's.
 
 ## Features
 
