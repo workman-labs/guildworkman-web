@@ -47,15 +47,13 @@ export const bookingApi = (userData: BookAppointmentRequest) =>
 
 /* Appointment management — shapes matched to the backend
    (guildworkman-core -> backend-api):
-   - cancel/update are PUT with the id in the `appointmentId` query param
-   - delete is DELETE with the id in query + a { appointment_Id } body
-   - all wrap their payload in ApiResponse { data, status }
-   NOTE: viewAllAppointment currently returns a SINGLE appointment
-   (scheduleTime + category, no id/status). A proper list is pending a
-   backend change — see the appointments-API spec in this PR. */
+   - viewAllAppointment returns a LIST, each with id/status/amount/worker
+   - cancel/update/delete all take the id in the `appointmentId` query param
+   - update carries the new status in the body; cancel/delete take no body
+   - all wrap their payload in ApiResponse { data, status } */
 
 export const viewAllAppointmentApi = (clientId: string) =>
-  getJson<ApiEnvelope<ViewAllAppointmentsResponse>>(
+  getJson<ApiEnvelope<ViewAllAppointmentsResponse[]>>(
     `/api/v1/client/viewAllAppointment?clientId=${encodeURIComponent(clientId)}`
   );
 
@@ -75,8 +73,7 @@ export const updateAppointmentApi = (appointmentId: number, body: UpdateAppointm
 export const deleteAppointmentApi = (appointmentId: number) =>
   requestJson<ApiEnvelope<unknown>>(
     "DELETE",
-    `/api/v1/client/deleteAppointment?appointmentId=${appointmentId}`,
-    { appointment_Id: appointmentId }
+    `/api/v1/client/deleteAppointment?appointmentId=${appointmentId}`
   );
 
 // --- Skilled worker ---
