@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 480 480" width="480" height="480">
+    <defs>
+      <linearGradient id="fg-steel" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3A82B8"/><stop offset="1" stop-color="#1C4B6E"/>
+      </linearGradient>
+    </defs>
+    <rect x="140" y="60" width="200" height="200" rx="46" fill="url(#fg-steel)"/>
+    <path d="M 178 116 L 206 214 L 240 158 L 274 214 L 302 116" fill="none"
+          stroke="#E8A13C" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="196" y="228" width="88" height="15" rx="7.5" fill="#E8A13C"/>
+    <text x="240" y="338" text-anchor="middle" font-family="Helvetica Neue,Helvetica,Arial,sans-serif"
+          font-size="56" font-weight="800" letter-spacing="4" fill="#1D2C39">WORKMAN</text>
+    <text x="240" y="378" text-anchor="middle" font-family="Helvetica Neue,Helvetica,Arial,sans-serif"
+          font-size="17" font-weight="700" letter-spacing="15" fill="#2C6E9B">LABS</text>
+</svg>

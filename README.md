@@ -15,6 +15,7 @@ booking, cancellation, update, and review flows against the backend API in
 - [Project ecosystem](#project-ecosystem)
 - [Tech stack](#tech-stack)
 - [Design system](#design-system)
+- [Brand assets](#brand-assets)
 - [Features](#features)
 - [Web3 / Stellar touches](#web3--stellar-touches)
 - [Project structure](#project-structure)
@@ -70,6 +71,37 @@ Colors and type are defined once as CSS custom properties in
   blending into the brand palette.
 - **Type** — Fraunces (serif) for headings, Inter (sans) for body text, both
   loaded via `next/font/google`.
+
+## Brand assets
+
+The logo marks live in `public/brand/`. Each one ships as an SVG master plus a
+4× PNG; **the SVG is the source of truth** — reach for it anywhere the mark
+scales (favicons, print, large hero use) and keep the PNG for fixed-size or
+non-vector surfaces. PNGs are transparent except where a mark carries its own
+tile. In-app, the same geometry is also available as React components in
+`src/components/brand/` (`Logo`, `NorthStar`, `AdinkraPattern`) — prefer those
+over an `<img>` when the mark needs to inherit theme colors.
+
+| Asset | Use |
+|---|---|
+| `guildworkman-lockup` | Primary horizontal lockup — chevron + wordmark |
+| `guildworkman-lockup-stacked` | Vertical lockup, for square-ish spaces |
+| `guildworkman-lockup-reversed` | The lockup recolored for dark grounds |
+| `guildworkman-star` | North Star reputation mark, full color |
+| `guildworkman-star-mono` | One-color North Star, check knocked out |
+| `guildworkman-appicon` | App icon — gold star on an indigo tile |
+| `guildworkman-adinkra` | Cultural mark on a terracotta tile |
+| `guildworkman-adinkra-mono` | One-color Adinkra glyph, for stamps and print |
+
+The wordmark in the lockups is set in **Inter** (weight 800), matching the
+`Logo` component, so exported art and rendered UI agree.
+
+### `public/brand/study/`
+
+An **archive of the superseded identity exploration** (`workman-forge`,
+`workman-chevron`, `workman-seal`). These are "Workman Labs" wordmarks in an
+older steel-blue/amber palette — they are **not** the current brand and should
+never be used in the app. They're kept only for design reference.
 
 ## Features
 

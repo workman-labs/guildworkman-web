@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 480 480" width="480" height="480">
+    <g fill="none" stroke="#20262B" stroke-width="2">
+      <circle cx="240" cy="240" r="196"/>
+      <circle cx="240" cy="240" r="182" stroke-width="5"/>
+      <circle cx="240" cy="240" r="150"/>
+    </g>
+    <circle cx="84" cy="240" r="5" fill="#20262B"/>
+    <circle cx="396" cy="240" r="5" fill="#20262B"/>
+    <defs>
+      <path id="ringTop" d="M 84 240 a 156 156 0 0 1 312 0"/>
+      <path id="ringBot" d="M 90 240 a 150 150 0 0 0 300 0"/>
+    </defs>
+    <text font-family="Georgia,'Times New Roman',serif" font-size="31" font-weight="700" letter-spacing="7" fill="#20262B">
+      <textPath href="#ringTop" startOffset="50%" text-anchor="middle">WORKMAN · LABS</textPath>
+    </text>
+    <text font-family="Georgia,'Times New Roman',serif" font-size="20" font-weight="400" letter-spacing="5" fill="#20262B">
+      <textPath href="#ringBot" startOffset="50%" text-anchor="middle">CRAFT · SYSTEMS</textPath>
+    </text>
+    <text x="240" y="292" text-anchor="middle" font-family="Georgia,'Times New Roman',serif"
+          font-size="152" font-weight="700" fill="#20262B">W</text>
+    <text x="240" y="330" text-anchor="middle" font-family="Georgia,'Times New Roman',serif"
+          font-size="15" font-weight="700" letter-spacing="6" fill="#20262B">EST · 2026</text>
+</svg>

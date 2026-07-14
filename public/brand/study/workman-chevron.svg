@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 748 300" width="748" height="300">
+    <path d="M 96 108 L 132 222 L 170 148" fill="none" stroke="#2C6E9B"
+          stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 170 148 L 208 222 L 244 108" fill="none" stroke="#E8A13C"
+          stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="286" y="193" font-family="Helvetica Neue,Helvetica,Arial,sans-serif"
+          font-size="92" font-weight="800" letter-spacing="-3" fill="#1D2C39">workman</text>
+    <text x="290" y="232" font-family="Helvetica Neue,Helvetica,Arial,sans-serif"
+          font-size="21" font-weight="700" letter-spacing="9" fill="#7E868D">LABS</text>
+</svg>

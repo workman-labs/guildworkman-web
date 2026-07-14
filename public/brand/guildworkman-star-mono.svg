@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480">
+    <defs><mask id="cut"><rect width="480" height="480" fill="#fff"/><path d="M198 244 L228 274 L294 206" fill="none" stroke="#000" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/></mask></defs>
+    <path d="M240 70 C250 175 260 185 365 240 C260 295 250 305 240 410 C230 305 220 295 115 240 C220 185 230 175 240 70 Z" fill="#1B2440" mask="url(#cut)"/>
+</svg>
