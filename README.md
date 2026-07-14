@@ -101,6 +101,22 @@ over an `<img>` when the mark needs to inherit theme colors.
 The wordmark in the lockups is set in **Inter** (weight 800), matching the
 `Logo` component, so exported art and rendered UI agree.
 
+### Favicons and app icons
+
+Derived from the North Star and wired up through Next's App Router file
+conventions — no manual `<link>` tags:
+
+| File | Serves |
+|---|---|
+| `src/app/favicon.ico` | 16 / 32 / 48px. Per the identity system's "drop the check under 20px" rule, **16px is the plain star**; the check appears from 32px up, where it's legible. |
+| `src/app/icon.svg` | Vector favicon, for browsers that take one |
+| `src/app/apple-icon.png` | 180×180 iOS home-screen icon |
+| `src/app/manifest.ts` | The PWA manifest, pointing at `public/icons/icon-{192,512}.png` |
+
+The tile icons are full-bleed (no baked-in rounded corners — iOS and Android
+apply their own masks), and the star is held inside the central 60% so it
+survives the maskable safe-zone crop.
+
 ### `public/brand/study/`
 
 An **archive of the superseded identity exploration** (`workman-forge`,
