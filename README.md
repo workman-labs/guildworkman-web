@@ -97,6 +97,7 @@ over an `<img>` when the mark needs to inherit theme colors.
 | `guildworkman-appicon` | App icon — gold star on an indigo tile |
 | `guildworkman-adinkra` | Cultural mark on a terracotta tile |
 | `guildworkman-adinkra-mono` | One-color Adinkra glyph, for stamps and print |
+| `workman-labs-avatar` | 512×512 GitHub org avatar for [workman-labs](https://github.com/workman-labs) — the North Star on a full-bleed navy tile |
 
 The wordmark in the lockups is set in **Inter** (weight 800), matching the
 `Logo` component, so exported art and rendered UI agree.
@@ -122,14 +123,12 @@ survives the maskable safe-zone crop.
 An **archive of the superseded identity exploration** (`workman-forge`,
 `workman-chevron`, `workman-seal`). These are "Workman Labs" wordmarks in an
 older steel-blue/amber palette — they are **not** the current GuildWorkman
-brand and should never be used in the app. They're kept only for design
-reference.
+brand and should never be used anywhere. Nothing here is live; they're kept
+only for design reference.
 
-The one live exception is `workman-labs-avatar.png` (512×512), the **GitHub
-org avatar** for [workman-labs](https://github.com/workman-labs). It's the
-chevron mark alone on an ink tile: the horizontal lockup is 2.5:1, so a square
-avatar crop would truncate it, and the wordmark is illegible at the ~20–40px
-sizes GitHub renders. It belongs to the org's identity, not the app's.
+Note that the chevron in this folder shares its peak geometry with the current
+`guildworkman-lockup` — it is the same mark in the rejected palette, which is
+exactly why it isn't fit for reuse.
 
 ## Features
 
