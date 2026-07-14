@@ -34,6 +34,12 @@ export interface BookAppointmentRequest {
   scheduleTime: string;
   category: string;
   clientId: string;
+  /** The pro being booked. Optional on the backend; we can only send it once
+      workers come from the API — the browse list is still sample data whose
+      ids ("gw-chidi") aren't the backend's numeric SkilledWorker ids. */
+  skilledWorkerId?: number;
+  /** Agreed price, in naira. */
+  amount?: number;
 }
 
 /** Backend wraps most responses as ApiResponse { data, status }. */
@@ -50,22 +56,25 @@ export type AppointmentStatus =
   | "CANCELLED"
   | "UPDATED";
 
-/** What the current viewAllAppointment endpoint actually returns — a single
-    record with just these two fields. A full list (id, status, worker,
-    amount) is pending a backend change; see the appointments-API spec. */
-export interface ViewAllAppointmentsResponse {
-  scheduleTime: string;
-  category: string;
+/** The pro attached to an appointment. Null when the booking didn't record
+    one (skilledWorkerId is optional on the backend). */
+export interface AppointmentWorker {
+  id: number;
+  fullName: string;
+  category: string | null;
 }
 
-/** Richer domain shape the redesigned account screens will use once the
-    backend returns it. Not yet populated by the live API. */
-export interface Appointment {
+/** One appointment from viewAllAppointment, which returns a LIST of these.
+    The `id` is what cancel/update/delete take as ?appointmentId= — without it
+    appointment management was unreachable from the client. */
+export interface ViewAllAppointmentsResponse {
   id: number;
-  scheduleTime?: string;
-  category?: string;
-  status?: AppointmentStatus;
-  amount?: number;
+  status: AppointmentStatus;
+  category: string;
+  /** LocalDateTime, no zone — e.g. "2026-07-20T10:30:00". */
+  scheduleTime: string;
+  amount: number | null;
+  worker: AppointmentWorker | null;
 }
 
 export interface BookAppointmentResponse {

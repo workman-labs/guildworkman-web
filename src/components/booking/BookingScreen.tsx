@@ -67,7 +67,16 @@ export default function BookingScreen({
     try {
       // Combine the picked date + slot into the datetime the API expects.
       const scheduleTime = `${dateIso}T${time}`;
-      const res = await bookingApi({ scheduleTime, category: apiCategory, clientId });
+      // The API also takes a skilledWorkerId, but we can't send one yet: the
+      // pros in the browse list are sample data whose ids ("gw-chidi") aren't
+      // the backend's numeric SkilledWorker ids. Until workers are fetched from
+      // the API, the appointment records the amount but no pro.
+      const res = await bookingApi({
+        scheduleTime,
+        category: apiCategory,
+        clientId,
+        amount: total,
+      });
 
       if (res.status) {
         // NOTE: Soroban escrow contract call still to come — the funds
