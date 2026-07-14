@@ -56,21 +56,26 @@ GuildWorkman lives in two repositories:
 The whole UI is built on a small set of hand-written Tailwind primitives in
 `src/components/ui/` rather than a component library:
 
-- `Button` — `variant`: `primary` / `secondary` / `ghost` / `outline-inverse`; `size`: `sm` / `md` / `lg`
+- `Button` — `variant`: `primary` / `secondary` / `ghost` / `outline-inverse` / `gold`; `size`: `sm` / `md` / `lg`
 - `Input`, `Select` — labeled form fields with built-in error display
 - `Card` — bordered/shadowed container
-- `Badge` — pill badge with `tone`: `brand` / `gold` / `success` / `error` / `neutral` / `chain`
+- `Badge` — pill badge with `tone`: `brand` / `gold` / `success` / `error` / `neutral` / `chain` / `navy`
 
 Colors and type are defined once as CSS custom properties in
-`src/app/globals.css` and mirrored into Tailwind's `@theme inline` block:
+`src/app/globals.css` and mirrored into Tailwind's `@theme inline` block.
+This is **Identity System v1** — see [Brand assets](#brand-assets):
 
-- **Palette** — warm terracotta (`brand-*`) as the primary color, warm
-  charcoal (`ink-*`) instead of pure gray, cream instead of stark white, gold
-  as a secondary accent, and a deep indigo (`chain-*`) reserved specifically
-  for on-chain/wallet touches so they read as a distinct layer rather than
-  blending into the brand palette.
-- **Type** — Fraunces (serif) for headings, Inter (sans) for body text, both
-  loaded via `next/font/google`.
+- **Palette** — trust navy (`--navy`) as the primary, guild gold (`--gold`) as
+  the reputation accent (the North Star, ratings, escrow seals), and terracotta
+  (`--terra`) as the expressive voice reserved for the cultural mark and
+  worker-facing bands. All of it sits on a warm sand ground (`--sand`) rather
+  than stark white, with warm-biased ink (`--ink`) instead of pure gray.
+- **Type** — Inter throughout (grotesque, not serif), loaded via
+  `next/font/google`.
+- **Dark theme** — a token-level flip in `globals.css`. It follows
+  `prefers-color-scheme` by default; a stored preference stamps `data-theme` on
+  `<html>` and wins in both directions (`ThemeToggle` in the navbar, with a
+  no-FOUC script in the layout).
 
 ## Brand assets
 
@@ -136,11 +141,11 @@ frontend currently does two honest things:
    hint instead of failing silently. This makes **no contract calls** —
    booking, payment, and review logic are all unchanged and still go through
    the backend API/Paystack.
-2. **An informational trust layer.** `src/components/TrustSection.tsx` on
-   the homepage, plus "Escrow protected" badges on worker/skill listings,
-   explain in plain language what the contracts *will* do (escrow-protected
-   payments, immutable on-chain reviews, loyalty-token rewards) once the
-   backend integration lands.
+2. **An informational trust layer.** The homepage sections (`Hero`,
+   `HowItWorks`, `StatsBand`) plus "Escrow protected" badges on worker cards
+   and the booking flow explain in plain language what the contracts *will* do
+   (escrow-protected payments, immutable on-chain reviews, loyalty-token
+   rewards) once the backend integration lands.
 
 ## Project structure
 
@@ -150,6 +155,7 @@ src/
     book/[category]/page.tsx   # dynamic route, server component
   components/
     ui/           # design-system primitives (Button, Input, Select, Card, Badge)
+    brand/        # the marks as components (Logo, NorthStar, AdinkraPattern)
     *.tsx         # page-level and shared client components
   lib/
     api.ts        # typed API client — every backend call goes through here
@@ -159,6 +165,8 @@ src/
     wallet.ts     # useWallet() hook wrapping @stellar/freighter-api
 public/
   assets/         # images used across the app
+  brand/          # exported logo marks (SVG masters + 4x PNGs)
+    study/        # superseded identity exploration — reference only
 ```
 
 ## API integration
