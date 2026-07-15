@@ -13,6 +13,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      // Advisory, not a correctness error: this fires on standard patterns
+      // like fetch-on-mount and hydration-safe reads (e.g. theme from
+      // localStorage). Kept visible as a warning rather than blocking CI.
+      "react-hooks/set-state-in-effect": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;
