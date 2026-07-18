@@ -1,6 +1,6 @@
 # GuildWorkman Web
 
-**Live:** [guildworkman-web.vercel.app](https://guildworkman-web.vercel.app)
+**Live:** [guildworkman-web.vercel.app](https://guildworkman-web.vercel.app) &nbsp;·&nbsp; **X:** [@guildworkman](https://x.com/guildworkman)
 
 The client-facing web app for **GuildWorkman** — a marketplace that connects
 clients with skilled tradespeople (electricians, plumbers, beauticians,
