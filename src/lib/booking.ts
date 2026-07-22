@@ -1,4 +1,5 @@
 import type { CategoryKey } from "./marketplace";
+import { PROVIDER_TIME_ZONE, todayIsoInZone } from "./timezone";
 
 export interface Service {
   id: string;
@@ -60,18 +61,30 @@ const DOW_TITLE = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 /** Compute the next `count` days on the server so the client hydrates
-    from stable prop values (no midnight hydration mismatch). */
+    from stable prop values (no midnight hydration mismatch).
+
+    "Today" is anchored to PROVIDER_TIME_ZONE (Lagos) rather than the host
+    machine's own clock — serverless hosts typically run in UTC, so around
+    midnight WAT the old `new Date()` could compute the wrong "today" (and
+    therefore the wrong 7-day window) for a Lagos-based calendar. The dates
+    returned are still plain ISO day strings with no time component; slot
+    *times* are converted to the visitor's zone client-side (see
+    lib/timezone.ts) so this stays hydration-safe. */
 export function buildDates(count = 7): DateChip[] {
-  const today = new Date();
+  const todayIso = todayIsoInZone(PROVIDER_TIME_ZONE);
+  const [y, m, d] = todayIso.split("-").map(Number);
+  // Noon UTC avoids landing on a different calendar day when this Date is
+  // later read back with .getDate()/.getDay() in the host's own zone.
+  const today = new Date(Date.UTC(y, m - 1, d, 12));
   return Array.from({ length: count }, (_, i) => {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    const dayIdx = d.getDay();
+    const day = new Date(today);
+    day.setUTCDate(today.getUTCDate() + i);
+    const dayIdx = day.getUTCDay();
     return {
-      iso: d.toISOString().slice(0, 10),
+      iso: day.toISOString().slice(0, 10),
       dow: DOW_SHORT[dayIdx],
-      num: String(d.getDate()),
-      label: `${DOW_TITLE[dayIdx]} ${d.getDate()} ${MONTHS[d.getMonth()]}`,
+      num: String(day.getUTCDate()),
+      label: `${DOW_TITLE[dayIdx]} ${day.getUTCDate()} ${MONTHS[day.getUTCMonth()]}`,
       disabled: dayIdx === 0,
     };
   });
