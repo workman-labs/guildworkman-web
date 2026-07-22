@@ -273,3 +273,20 @@ Default branch is `dev`. Open a PR against `dev` for review before merging.
   integration (see [Web3 / Stellar touches](#web3--stellar-touches)).
 - Some seed/demo content in `src/lib/constants.ts` (e.g. placeholder worker
   names and descriptions) is illustrative, not real data.
+- **Booking calendar timezone + slot locking** (`src/lib/timezone.ts`,
+  `src/lib/slotLock.ts`): the backend's `scheduleTime` is a bare
+  `LocalDateTime` with no zone, implicitly meaning Lagos local time — there's
+  no per-worker or per-visitor zone stored server-side. The booking calendar
+  therefore treats `Africa/Lagos` as the one provider zone, converts it to
+  the visitor's browser zone for display, and locks the *date chip* to the
+  provider's calendar day (only the *time* re-renders in the visitor's zone,
+  with a `+1`/`-1` badge when the converted time crosses midnight) rather
+  than shifting a visitor's day forward/back — a full multi-day spillover
+  view is a reasonable follow-up if this becomes confusing in practice.
+  Slot locking is client-side only (`localStorage` + `BroadcastChannel`,
+  5-minute TTL): it stops a visitor from double-booking themselves across
+  tabs, but can't stop two different visitors from racing for the same slot
+  — that needs a backend "is this worker free at X" endpoint, which
+  `guildworkman-core` doesn't expose yet (`viewAllAppointment` only returns
+  the logged-in client's own bookings). See the module doc comments for the
+  full reasoning.
