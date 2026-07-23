@@ -104,15 +104,10 @@ export function convertSlotToZone(dateIso: string, time: string, zone: string): 
   const utcInstant = zonedTimeToUtc(dateIso, time, PROVIDER_TIME_ZONE);
   const zoned = getZonedParts(utcInstant, zone);
 
-  const providerMidnightUtc = zonedTimeToUtc(dateIso, "00:00", PROVIDER_TIME_ZONE);
-  const zonedMidnightSameDay = Date.UTC(zoned.year, zoned.month - 1, zoned.day);
-  const providerMidnightZoned = getZonedParts(providerMidnightUtc, zone);
-  const providerDayInZoneUtc = Date.UTC(
-    providerMidnightZoned.year,
-    providerMidnightZoned.month - 1,
-    providerMidnightZoned.day
-  );
-  const dayOffset = Math.round((zonedMidnightSameDay - providerDayInZoneUtc) / 86_400_000);
+  const zonedDayUtc = Date.UTC(zoned.year, zoned.month - 1, zoned.day);
+  const [y, m, d] = dateIso.split("-").map(Number);
+  const providerDayUtc = Date.UTC(y, m - 1, d);
+  const dayOffset = Math.round((zonedDayUtc - providerDayUtc) / 86_400_000);
 
   return {
     time: `${String(zoned.hour).padStart(2, "0")}:${String(zoned.minute).padStart(2, "0")}`,

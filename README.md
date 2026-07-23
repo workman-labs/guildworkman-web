@@ -236,6 +236,7 @@ npm start
 ## Testing
 
 ```sh
+npm test
 npx tsc --noEmit   # type-check
 npx eslint .        # lint
 npx next build      # production build, also runs a TypeScript check
@@ -266,7 +267,7 @@ Default branch is `dev`. Open a PR against `dev` for review before merging.
 
 ## Known limitations
 
-- No automated test suite (see [Testing](#testing)).
+- timezone.ts and slotLock.ts now have unit tests.
 - The wallet-connect button is a real Freighter connection but doesn't yet
   do anything with the connected address — no contract calls, no signing.
   That's intentionally scoped to land alongside the backend Soroban
