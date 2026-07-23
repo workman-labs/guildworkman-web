@@ -5,6 +5,7 @@ import Link from "next/link";
 import { HiMenu, HiX } from "react-icons/hi";
 import Logo from "./brand/Logo";
 import ThemeToggle from "./ThemeToggle";
+import NotificationCenter from "./notifications/NotificationCenter";
 import { buttonClasses } from "./ui/Button";
 
 const navLinks = [
@@ -33,6 +34,7 @@ export default function Navbar() {
 
         <div className="ml-auto hidden items-center gap-2 sm:flex">
           <ThemeToggle />
+          <NotificationCenter />
           <Link href="/login" className={buttonClasses("outline", "sm")}>
             Log in
           </Link>
@@ -43,6 +45,7 @@ export default function Navbar() {
 
         <div className="ml-auto flex items-center gap-2 sm:hidden">
           <ThemeToggle />
+          <NotificationCenter />
           <button
             className="text-2xl text-ink"
             aria-label={open ? "Close menu" : "Open menu"}

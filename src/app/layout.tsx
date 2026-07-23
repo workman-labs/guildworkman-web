@@ -4,6 +4,8 @@ import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { NotificationProvider } from "@/components/notifications/useNotifications";
+import NotificationToast from "@/components/notifications/NotificationToast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,9 +33,12 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-full flex flex-col bg-sand text-ink">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <NotificationProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <NotificationToast />
+        </NotificationProvider>
       </body>
     </html>
   );
