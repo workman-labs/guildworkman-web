@@ -71,24 +71,15 @@ export default function BookingScreen({
     setVisitorZone(getVisitorTimeZone());
   }, []);
   const showsOwnZone = visitorZone !== PROVIDER_TIME_ZONE;
-
-  // --- slot locking: stop this visitor double-booking themselves ----------
-  // See lib/slotLock.ts for what this does and doesn't cover.
   const [holderId] = useState(createHolderId);
   const [lockTick, setLockTick] = useState(0);
   useEffect(() => subscribeToLockChanges(() => setLockTick((t) => t + 1)), []);
   useEffect(() => {
-    // Locks carry their own TTL, but nothing re-renders when one silently
-    // expires unless something asks — a light poll keeps "Held" labels and
-    // disabled states from going stale while the page just sits open.
     const id = window.setInterval(() => setLockTick((t) => t + 1), 15_000);
     return () => window.clearInterval(id);
   }, []);
 
   const currentKey = slotKey(worker.id, dateIso, time);
-  // Hold the currently-selected slot for this visitor, and release
-  // whichever slot they held before if the selection changes. Skipped once
-  // booked, since the slot is then genuinely taken rather than just held.
   useEffect(() => {
     if (booked) return;
     acquireSlotLock(currentKey, holderId);

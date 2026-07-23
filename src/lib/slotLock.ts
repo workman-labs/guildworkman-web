@@ -22,7 +22,7 @@
  * left behind by a crashed tab or an abandoned checkout releases itself
  * automatically instead of blocking that slot forever.
  *
- * ARCHITECTURAL NOTE for reviewers: this does NOT prevent two different
+ * ARCHITECTURAL NOTE: this does NOT prevent two different
  * visitors (different browsers) from racing for the same slot — that
  * needs a backend change (a per-worker availability/hold endpoint) which
  * is out of scope for a Frontend-only issue. Tracking that as a follow-up
@@ -63,8 +63,6 @@ function readLock(key: string): SlotLock | null {
     }
     return lock;
   } catch {
-    // Corrupt entry (e.g. hand-edited storage) — treat as unlocked rather
-    // than throwing during render.
     return null;
   }
 }

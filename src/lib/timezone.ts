@@ -23,10 +23,6 @@
     worker timezone either. */
 export const PROVIDER_TIME_ZONE = "Africa/Lagos";
 
-/** Detects the visitor's IANA timezone from the browser. Falls back to the
-    provider zone on the server (SSR) or in environments without `Intl`, so
-    date math never throws — worst case a first paint briefly shows
-    provider-local time before the client re-renders after mount. */
 export function getVisitorTimeZone(): string {
   if (typeof Intl === "undefined") return PROVIDER_TIME_ZONE;
   try {
@@ -83,15 +79,6 @@ function getOffsetMinutes(instant: Date, zone: string): number {
 /**
  * Converts a "wall clock" date + time meant to be read in `zone` into a
  * real UTC instant (a `Date`).
- *
- * JS's `Date` constructor has no concept of "this clock reading, in that
- * zone" — `new Date("2026-07-24T09:30")` is parsed in whatever zone the
- * *runtime* happens to be in, which is wrong here since a slot always
- * means 09:30 in Lagos regardless of where the Node process or browser
- * lives. We work around this with a converge-in-two-steps trick: guess the
- * offset using UTC, apply it, then re-check — this handles the rare case
- * where the correction pushes the instant across a DST boundary that would
- * otherwise shift the offset again.
  */
 export function zonedTimeToUtc(dateIso: string, time: string, zone: string): Date {
   const [year, month, day] = dateIso.split("-").map(Number);
@@ -108,9 +95,6 @@ export function zonedTimeToUtc(dateIso: string, time: string, zone: string): Dat
 export interface ZonedSlot {
   /** "HH:mm" as it reads in the target zone. */
   time: string;
-  /** -1, 0, or +1: whole calendar days the target-zone reading falls before
-      or after the provider-zone date. A 09:30 Lagos slot can read as the
-      previous evening in New York, or the next morning in Tokyo. */
   dayOffset: number;
 }
 
@@ -151,10 +135,6 @@ export function offsetLabel(zone: string, at: Date = new Date()): string {
   }
 }
 
-/** Today's Y-M-D as read in `zone`, independent of the host machine's own
-    timezone (important on serverless hosts, which usually run in UTC, not
-    Lagos — without this, "today" in Nigeria could be off by a day around
-    midnight WAT). */
 export function todayIsoInZone(zone: string): string {
   const { year, month, day } = getZonedParts(new Date(), zone);
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;

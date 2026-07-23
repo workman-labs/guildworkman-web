@@ -65,11 +65,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
     "Today" is anchored to PROVIDER_TIME_ZONE (Lagos) rather than the host
     machine's own clock — serverless hosts typically run in UTC, so around
-    midnight WAT the old `new Date()` could compute the wrong "today" (and
-    therefore the wrong 7-day window) for a Lagos-based calendar. The dates
-    returned are still plain ISO day strings with no time component; slot
-    *times* are converted to the visitor's zone client-side (see
-    lib/timezone.ts) so this stays hydration-safe. */
+    midnight WAT the old `new Date()` could compute the wrong "toda */
 export function buildDates(count = 7): DateChip[] {
   const todayIso = todayIsoInZone(PROVIDER_TIME_ZONE);
   const [y, m, d] = todayIso.split("-").map(Number);
