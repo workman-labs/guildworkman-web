@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -9,6 +9,7 @@ import {
   FaLock,
   FaCheck,
   FaPlus,
+  FaClock,
 } from "react-icons/fa6";
 import NorthStar from "@/components/brand/NorthStar";
 import RatingPill from "@/components/marketplace/RatingPill";
@@ -17,6 +18,20 @@ import { bookingApi } from "@/lib/api";
 import { getErrorMessage } from "@/lib/types";
 import { formatNaira, type Worker } from "@/lib/marketplace";
 import { feeFor, type Service, type DateChip, type TimeSlot } from "@/lib/booking";
+import {
+  PROVIDER_TIME_ZONE,
+  convertSlotToZone,
+  getVisitorTimeZone,
+  offsetLabel,
+} from "@/lib/timezone";
+import {
+  acquireSlotLock,
+  createHolderId,
+  isLockedByOther,
+  releaseSlotLock,
+  slotKey,
+  subscribeToLockChanges,
+} from "@/lib/slotLock";
 
 interface Props {
   worker: Worker;
@@ -47,6 +62,40 @@ export default function BookingScreen({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // --- timezone: render times in the visitor's own zone -------------------
+  // Start off matching the server-rendered provider zone so hydration has
+  // nothing to mismatch against, then swap to the browser's real zone once
+  // mounted (Intl isn't available/reliable during SSR).
+  const [visitorZone, setVisitorZone] = useState(PROVIDER_TIME_ZONE);
+  useEffect(() => {
+    setVisitorZone(getVisitorTimeZone());
+  }, []);
+  const showsOwnZone = visitorZone !== PROVIDER_TIME_ZONE;
+  const [holderId] = useState(createHolderId);
+  const [lockTick, setLockTick] = useState(0);
+  useEffect(() => subscribeToLockChanges(() => setLockTick((t) => t + 1)), []);
+  useEffect(() => {
+    const id = window.setInterval(() => setLockTick((t) => t + 1), 15_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const currentKey = slotKey(worker.id, dateIso, time);
+  useEffect(() => {
+    if (booked) return;
+    acquireSlotLock(currentKey, holderId);
+    return () => releaseSlotLock(currentKey, holderId);
+  }, [currentKey, holderId, booked]);
+
+  function selectTime(t: string) {
+    const key = slotKey(worker.id, dateIso, t);
+    if (!acquireSlotLock(key, holderId)) {
+      setError("That time was just taken in another tab — pick another slot.");
+      return;
+    }
+    setError("");
+    setTime(t);
+  }
+
   const service = services.find((s) => s.id === serviceId) ?? services[0];
   const selectedDate = dates.find((d) => d.iso === dateIso) ?? firstOpenDate;
   const fee = feeFor(service.price);
@@ -60,6 +109,14 @@ export default function BookingScreen({
       typeof window !== "undefined" ? localStorage.getItem("userId") : null;
     if (!clientId || clientId === "undefined") {
       router.push("/login?as=client");
+      return;
+    }
+
+    // Re-confirm the hold right before submitting — it may have expired, or
+    // (extremely unlikely with a 5-minute TTL, but possible) another tab
+    // could have grabbed it between selection and now.
+    if (!acquireSlotLock(currentKey, holderId)) {
+      setError("This slot was just taken — please pick another time.");
       return;
     }
 
@@ -99,7 +156,9 @@ export default function BookingScreen({
     return (
       <Confirmation
         worker={worker}
-        when={`${selectedDate.label} · ${time}`}
+        when={`${selectedDate.label} · ${convertSlotToZone(dateIso, time, visitorZone).time}${
+          showsOwnZone ? ` (${offsetLabel(visitorZone)})` : ""
+        }`}
         total={total}
         reference={booked.ref}
       />
@@ -191,27 +250,49 @@ export default function BookingScreen({
                 );
               })}
             </div>
-            <span className="mb-2 block text-xs font-bold uppercase tracking-wider text-muted">
+            <span className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-bold uppercase tracking-wider text-muted">
               Available times · {selectedDate.label}
             </span>
-            <div className="flex flex-wrap gap-2.5">
+            {showsOwnZone ? (
+              <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-muted">
+                <FaClock className="text-[0.7rem]" aria-hidden />
+                Shown in your time ({offsetLabel(visitorZone)}) · {worker.name.split(" ")[0]} is in
+                Lagos ({offsetLabel(PROVIDER_TIME_ZONE)})
+              </p>
+            ) : null}
+            <div className="flex flex-wrap gap-2.5" key={`slots-${lockTick}`}>
               {timeSlots.map((s) => {
-                const sel = s.t === time && !s.off;
+                const key = slotKey(worker.id, dateIso, s.t);
+                const held = !s.off && isLockedByOther(key, holderId);
+                const disabled = s.off || held;
+                const sel = s.t === time && !disabled;
+                const zoned = convertSlotToZone(dateIso, s.t, visitorZone);
                 return (
                   <button
                     key={s.t}
                     type="button"
-                    disabled={s.off}
-                    onClick={() => setTime(s.t)}
-                    className={`rounded-xl border px-4 py-2.5 font-bold tabular-nums transition ${
-                      s.off
+                    disabled={disabled}
+                    title={held ? "Someone else is holding this time — try another" : undefined}
+                    onClick={() => selectTime(s.t)}
+                    className={`relative rounded-xl border px-4 py-2.5 font-bold tabular-nums transition ${
+                      disabled
                         ? "cursor-not-allowed border-line text-muted line-through opacity-40"
                         : sel
                         ? "border-navy bg-navy text-white"
                         : "border-line hover:border-navy-2"
                     }`}
                   >
-                    {s.t}
+                    {zoned.time}
+                    {zoned.dayOffset !== 0 ? (
+                      <sup className="ml-0.5 font-sans text-[0.6rem] font-extrabold">
+                        {zoned.dayOffset > 0 ? "+1" : "-1"}
+                      </sup>
+                    ) : null}
+                    {held ? (
+                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-sand px-1.5 py-0.5 text-[0.55rem] font-extrabold uppercase tracking-wide text-muted">
+                        Held
+                      </span>
+                    ) : null}
                   </button>
                 );
               })}
@@ -266,7 +347,10 @@ export default function BookingScreen({
             <div className="grid gap-3 border-b border-line p-[18px]">
               <div className="flex items-center justify-between rounded-lg bg-sand px-3 py-2.5 text-sm">
                 <span className="text-muted">Appointment</span>
-                <span className="font-extrabold">{selectedDate.label} · {time}</span>
+                <span className="font-extrabold">
+                  {selectedDate.label} · {convertSlotToZone(dateIso, time, visitorZone).time}
+                  {showsOwnZone ? ` (${offsetLabel(visitorZone)})` : ""}
+                </span>
               </div>
               <Line k={service.label} v={formatNaira(service.price)} />
               <Line k="Service fee" v={formatNaira(fee)} />
