@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import {
   HiHome,
   HiCalendar,
   HiUser,
+  HiShieldCheck,
   HiLockClosed,
   HiMail,
   HiQuestionMarkCircle,
@@ -30,6 +32,7 @@ const navItems = [
   { icon: HiHome, label: "Dashboard" },
   { icon: HiCalendar, label: "Appointment" },
   { icon: HiUser, label: "My Profile", active: true },
+  { icon: HiShieldCheck, label: "Verify Identity", href: "/verify-identity" },
   { icon: HiLockClosed, label: "Login Details" },
   { icon: HiMail, label: "Message" },
   { icon: HiQuestionMarkCircle, label: "Help" },
@@ -67,16 +70,24 @@ export default function ProfileForm() {
         <h2 className="font-heading text-lg font-semibold mb-8">My Account</h2>
         <nav>
           <ul className="flex flex-col gap-1 text-sm">
-            {navItems.map((item) => (
-              <li
-                key={item.label}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
-                  item.active ? "bg-terra text-white font-medium" : "text-white/70 hover:bg-white/5"
-                }`}
-              >
-                <item.icon className="text-lg" /> {item.label}
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const itemClassName = `flex items-center gap-3 px-3 py-2.5 rounded-xl ${
+                item.active ? "bg-terra text-white font-medium" : "text-white/70 hover:bg-white/5"
+              }`;
+              return (
+                <li key={item.label}>
+                  {item.href ? (
+                    <Link href={item.href} className={itemClassName}>
+                      <item.icon className="text-lg" /> {item.label}
+                    </Link>
+                  ) : (
+                    <span className={itemClassName}>
+                      <item.icon className="text-lg" /> {item.label}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </aside>
