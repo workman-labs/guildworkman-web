@@ -2,10 +2,11 @@ import { SelectHTMLAttributes, forwardRef } from "react";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
+  error?: string;
 }
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, className = "", id, children, ...props }, ref) => {
+  ({ label, error, className = "", id, children, ...props }, ref) => {
     const selectId = id ?? props.name;
     return (
       <label className="flex flex-col gap-1.5 text-sm" htmlFor={selectId}>
@@ -13,11 +14,14 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           id={selectId}
-          className={`rounded-xl border border-line px-4 py-3 text-ink bg-surface outline-none transition-colors focus:border-navy-2 focus:ring-2 focus:ring-navy/15 ${className}`}
+          className={`rounded-xl border px-4 py-3 text-ink bg-surface outline-none transition-colors focus:border-navy-2 focus:ring-2 focus:ring-navy/15 ${
+            error ? "border-err" : "border-line"
+          } ${className}`}
           {...props}
         >
           {children}
         </select>
+        {error && <span className="text-err text-xs">{error}</span>}
       </label>
     );
   }
