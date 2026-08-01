@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { NotificationProvider } from "@/components/notifications/useNotifications";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import NotificationToast from "@/components/notifications/NotificationToast";
 
 const inter = Inter({
@@ -34,10 +35,12 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-sand text-ink">
         <NotificationProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <NotificationToast />
+          <ThemeProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <NotificationToast />
+          </ThemeProvider>
         </NotificationProvider>
       </body>
     </html>
