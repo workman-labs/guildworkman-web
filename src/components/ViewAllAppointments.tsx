@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { viewAllAppointmentApi } from "@/lib/api";
 import {
   STATUS_TONE,
@@ -19,6 +20,7 @@ export default function ViewAllAppointments() {
   const [appointments, setAppointments] = useState<ViewAllAppointmentsResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const load = useCallback(async () => {
     const clientId = getClientId();
@@ -79,7 +81,19 @@ export default function ViewAllAppointments() {
 
       <div className="flex flex-col gap-3">
         {appointments.map((appointment) => (
-          <Card key={appointment.id} className="p-4">
+          <Card
+            key={appointment.id}
+            className="p-4 cursor-pointer transition-shadow hover:shadow-float"
+            onClick={() => router.push(`/appoint-detail/${appointment.id}`)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                router.push(`/appoint-detail/${appointment.id}`);
+              }
+            }}
+          >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="font-medium text-ink">

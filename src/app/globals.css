@@ -152,3 +152,123 @@ h1, h2, h3, h4 {
 button:not(:disabled), [role="button"] {
   cursor: pointer;
 }
+
+/* ── Escrow timeline ── */
+
+.escrow-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.escrow-timeline__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+  padding-bottom: 24px;
+  opacity: 0.4;
+  transition: opacity 300ms ease;
+}
+
+.escrow-timeline__item--active {
+  opacity: 1;
+}
+
+.escrow-timeline__item--current .escrow-timeline__label {
+  color: var(--navy);
+}
+
+.escrow-timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+.escrow-timeline__item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 28px;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+  z-index: 0;
+}
+
+.escrow-timeline__item--active:not(:last-child)::before {
+  background: var(--navy);
+}
+
+.escrow-timeline__item--terminal:not(:last-child)::before {
+  background: var(--err);
+}
+
+.escrow-timeline__dot {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  margin-top: 1px;
+}
+
+.escrow-timeline__dot-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--line);
+  transition: color 300ms ease;
+}
+
+.escrow-timeline__item--active .escrow-timeline__dot-icon {
+  color: var(--navy);
+}
+
+.escrow-timeline__item--terminal .escrow-timeline__dot-icon {
+  color: var(--err);
+}
+
+.escrow-timeline__dot-ring {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: transparent;
+}
+
+.escrow-timeline__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.escrow-timeline__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 300ms ease;
+}
+
+.escrow-timeline__item--active .escrow-timeline__label {
+  color: var(--ink);
+}
+
+.escrow-timeline__desc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.escrow-timeline__time {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: var(--font-inter);
+  margin-top: 2px;
+}
