@@ -268,6 +268,19 @@ Default branch is `dev`. Open a PR against `dev` for review before merging.
 ## Known limitations
 
 - timezone.ts and slotLock.ts now have unit tests.
+- **Escrow funding wizard** (`src/components/escrow/`, `src/lib/escrowFunding.ts`,
+  route `/escrow/[bookingRef]`): a standalone, state-machine-driven wizard
+  (review → connect wallet → confirm → fund → funded/failed) for the "pay
+  into escrow" step, with full keyboard navigation, `aria-live`
+  announcements + focus management for screen readers, and resumable
+  progress via `localStorage` (same save-and-resume pattern as the identity
+  verification wizard). `fundEscrow()` simulates the round trip for the same
+  reason `submitIdentityVerification()` does — the Soroban `escrow` contract
+  isn't called from the backend yet (see
+  [Web3 / Stellar touches](#web3--stellar-touches)) — swap its body for a
+  real call once that integration lands. `BookingScreen`'s existing one-shot
+  "Pay into escrow" button is unchanged; wiring the booking flow to this
+  wizard is a follow-up.
 - The wallet-connect button is a real Freighter connection but doesn't yet
   do anything with the connected address — no contract calls, no signing.
   That's intentionally scoped to land alongside the backend Soroban
