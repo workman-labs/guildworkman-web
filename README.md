@@ -74,8 +74,11 @@ This is **Identity System v1** — see [Brand assets](#brand-assets):
   `next/font/google`.
 - **Dark theme** — a token-level flip in `globals.css`. It follows
   `prefers-color-scheme` by default; a stored preference stamps `data-theme` on
-  `<html>` and wins in both directions (`ThemeToggle` in the navbar, with a
-  no-FOUC script in the layout).
+  `<html>` and wins in both directions. Theme state is owned by
+  `<ThemeProvider>` (`src/components/theme/`) via the `useTheme` hook — the
+  per-user choice is persisted to localStorage, the OS preference is followed
+  live until a choice is made, and a no-FOUC script in the layout paints the
+  initial theme before React hydrates (`ThemeToggle` in the navbar).
 
 ## Brand assets
 
