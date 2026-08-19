@@ -60,8 +60,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setSystemTheme(getSystemTheme());
   }, []);
 
-  // Apply changes to <html> and keep following the OS while the user has
-  // not made an explicit choice.
+  // Apply changes to <html> and keep following the OS live, but only while
+  // the user has not made an explicit choice. When `theme` becomes non-null
+  // this effect returns early without subscribing — and because React runs
+  // the previous effect's cleanup first, the OS listener is unsubscribed the
+  // moment an explicit choice is made (and again on unmount). So the promise
+  // holds: "stored per-user choice wins; otherwise OS preference followed
+  // live until the user chooses."
   useEffect(() => {
     const resolved = theme ?? systemTheme;
     if (resolved) applyTheme(resolved);

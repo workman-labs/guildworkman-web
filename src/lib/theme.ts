@@ -26,7 +26,10 @@ export function isTheme(value: unknown): value is Theme {
   return value === "light" || value === "dark";
 }
 
-/** Read the persisted per-user choice; `null` when unset or corrupted. */
+/** Read the persisted per-user choice; `null` when unset, corrupted, or in a
+    non-browser environment (SSR — no `window`/localStorage). Never throws:
+    localStorage access is guarded by a `typeof window` check and a try/catch
+    (private mode, storage disabled). */
 export function getStoredTheme(): Theme | null {
   if (typeof window === "undefined") return null;
   try {
@@ -65,7 +68,9 @@ export function applyTheme(theme: Theme): void {
 }
 
 /** Subscribe to OS preference changes. Returns an unsubscribe function.
-    Safe to call in environments without matchMedia. */
+    Safe to call in environments without matchMedia (returns a no-op).
+    Prefers the modern `addEventListener` API and falls back to the legacy
+    `addListener`/`removeListener` pair for older browsers (e.g. Safari < 14). */
 export function listenForSystemTheme(onChange: (theme: Theme) => void): () => void {
   if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
     return () => {};
@@ -74,8 +79,13 @@ export function listenForSystemTheme(onChange: (theme: Theme) => void): () => vo
   const handler = (event: MediaQueryListEvent): void => {
     onChange(event.matches ? "dark" : "light");
   };
-  mql.addEventListener("change", handler);
-  return () => mql.removeEventListener("change", handler);
+  // Modern engines expose addEventListener; older ones only addListener.
+  if (typeof mql.addEventListener === "function") {
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }
+  mql.addListener(handler);
+  return () => mql.removeListener(handler);
 }
 
 /** Resolve the effective theme from a stored choice and the OS preference:
@@ -94,5 +104,11 @@ export function resolveTheme(
  * (prefers-color-scheme: dark)` rule handles the no-script case).
  * Kept here — next to the rest of the theme system — as the single source
  * of truth shared with the ThemeProvider.
+ *
+ * Safety: the string is exported as an immutable `const` and rendered via
+ * React's sanctioned `<script dangerouslySetInnerHTML>` API in the layout.
+ * The only interpolations are the compile-time constants `THEME_STORAGE_KEY`
+ * and `SYSTEM_DARK_QUERY` — never user input — and the body is a single
+ * minified line, so there is no XSS surface to introduce at render time.
  */
 export const themeScript = `(function(){try{var t=localStorage.getItem('${THEME_STORAGE_KEY}');var r=document.documentElement;if(t==='light'||t==='dark'){r.setAttribute('data-theme',t);r.style.colorScheme=t;}else{r.style.colorScheme=window.matchMedia('${SYSTEM_DARK_QUERY}').matches?'dark':'light';}}catch(e){}})();`;

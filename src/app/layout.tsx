@@ -28,6 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} h-full antialiased`}>
       <head>
+        {/*
+         * No-FOUC theme script: paints <html data-theme> + color-scheme
+         * before React hydrates. dangerouslySetInnerHTML is React's
+         * sanctioned way to emit an inline script; `themeScript` is an
+         * immutable, minified const whose only interpolations are
+         * compile-time constants (never user input), so there's no XSS
+         * surface here.
+         */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-full flex flex-col bg-sand text-ink">

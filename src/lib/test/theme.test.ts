@@ -74,6 +74,16 @@ describe("getStoredTheme / setStoredTheme", () => {
     });
     expect(() => setStoredTheme("light")).not.toThrow();
   });
+
+  it("is a safe no-op when window is unavailable (SSR)", () => {
+    vi.stubGlobal("window", undefined);
+    try {
+      expect(getStoredTheme()).toBeNull();
+      expect(() => setStoredTheme("dark")).not.toThrow();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });
 
 describe("getSystemTheme", () => {
@@ -90,6 +100,15 @@ describe("getSystemTheme", () => {
   it("reports light when the OS prefers light", () => {
     stubMatchMedia(false);
     expect(getSystemTheme()).toBe("light");
+  });
+
+  it("falls back to light when window is unavailable (SSR)", () => {
+    vi.stubGlobal("window", undefined);
+    try {
+      expect(getSystemTheme()).toBe("light");
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
 
@@ -136,6 +155,43 @@ describe("listenForSystemTheme", () => {
 
   it("is a no-op without matchMedia", () => {
     expect(() => listenForSystemTheme(vi.fn())).not.toThrow();
+  });
+
+  it("is a no-op when window is unavailable (SSR)", () => {
+    vi.stubGlobal("window", undefined);
+    try {
+      const unsubscribe = listenForSystemTheme(vi.fn());
+      expect(() => unsubscribe()).not.toThrow();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("falls back to legacy addListener/removeListener when addEventListener is absent", () => {
+    const listeners = new Set<(event: MediaQueryListEvent) => void>();
+    const mql = {
+      matches: false,
+      media: SYSTEM_DARK_QUERY,
+      addListener: vi.fn((cb: (event: MediaQueryListEvent) => void) => listeners.add(cb)),
+      removeListener: vi.fn((cb: (event: MediaQueryListEvent) => void) => listeners.delete(cb)),
+    } as unknown as MediaQueryList;
+    window.matchMedia = vi.fn().mockReturnValue(mql) as unknown as typeof window.matchMedia;
+
+    const onChange = vi.fn();
+    const unsubscribe = listenForSystemTheme(onChange);
+
+    // The modern API is absent, so the legacy path is used.
+    expect(mql.addEventListener).toBeUndefined();
+    expect(mql.addListener).toHaveBeenCalledTimes(1);
+
+    // Simulate the OS switching to dark via the legacy callback.
+    listeners.forEach((cb) => cb({ matches: true } as MediaQueryListEvent));
+    expect(onChange).toHaveBeenCalledWith("dark");
+
+    unsubscribe();
+    expect(mql.removeListener).toHaveBeenCalledTimes(1);
+    listeners.forEach((cb) => cb({ matches: false } as MediaQueryListEvent));
+    expect(onChange).toHaveBeenCalledTimes(1);
   });
 });
 

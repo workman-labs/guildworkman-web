@@ -80,6 +80,47 @@ This is **Identity System v1** — see [Brand assets](#brand-assets):
   live until a choice is made, and a no-FOUC script in the layout paints the
   initial theme before React hydrates (`ThemeToggle` in the navbar).
 
+#### Theme usage (light & dark mode)
+
+`src/lib/theme.ts` is the single source of truth for theme logic: the `Theme`
+type, the `THEME_STORAGE_KEY` constant, storage get/set, system-preference
+resolution and listening, and the shared no-FOUC `themeScript`. Components read
+`resolvedTheme` and call `setTheme` / `toggleTheme` through the `useTheme()`
+hook from `src/components/theme/`.
+
+Two wiring steps are required in the root layout
+(`src/app/layout.tsx`) — both are already in place; keep them if you ever
+rewrite the layout:
+
+1. **Paint before React hydrates (no flash).** Insert the exported inline
+   script in `<head>` via React's safe `<script dangerouslySetInnerHTML>`
+   API. It stamps `<html data-theme>` + `color-scheme` from the stored
+   choice, falling back to the OS preference:
+
+   ```tsx
+   import { themeScript } from "@/lib/theme";
+
+   // inside <head>:
+   <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+   ```
+
+2. **Wrap the whole app in `<ThemeProvider>`** so every theme-aware
+   component reads a consistent `resolvedTheme` (and re-renders on change)
+   from its very first render:
+
+   ```tsx
+   <ThemeProvider>
+     {/* Navbar (with <ThemeToggle />), main, footer, toasts … */}
+   </ThemeProvider>
+   ```
+
+The per-user choice is persisted to localStorage under `THEME_STORAGE_KEY`
+and wins over the OS preference; until a choice is made the app follows
+`prefers-color-scheme` live. The navy/gold/terracotta **color tokens** and
+their dark-mode overrides live in `src/app/globals.css` (the `@theme inline`
+block plus `data-theme` overrides) — update them there if the brand palette
+ever changes.
+
 ## Brand assets
 
 The logo marks live in `public/brand/`. Each one ships as an SVG master plus a
@@ -245,10 +286,12 @@ npx eslint .        # lint
 npx next build      # production build, also runs a TypeScript check
 ```
 
-There's no dedicated unit/integration test suite yet — verification today is
-type-checking, linting, a production build, and Playwright-driven smoke
-testing of every route (checking for console errors, layout overflow, and
-broken images) done ad hoc during review rather than committed as a CI suite.
+Unit tests live in `src/lib/test/` (theme system, timezone, slot locking,
+escrow funding, identity verification) and run with `npm test`. Verification
+today is `npm test`, type-checking, linting, a production build, and
+Playwright-driven smoke testing of every route (checking for console errors,
+layout overflow, and broken images) done ad hoc during review rather than
+committed as a CI suite.
 
 ## Deployment
 
