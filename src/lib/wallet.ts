@@ -23,6 +23,18 @@
  * itself the moment the user switches networks inside the extension, and
  * what catches an account switch or an access revocation without requiring a
  * reload.
+ *
+ * WHY THIS HOOK IS WRAPPED IN A CONTEXT PROVIDER
+ * `useWalletState` below owns real side effects — a session restore on
+ * mount and, once connected, a live polling watcher. It's exported for
+ * direct unit testing, but app code should never call it more than once:
+ * every call is a fully independent instance with its own poller, so two
+ * components each calling it (e.g. the navbar's desktop and mobile
+ * `WalletButton`, which are both mounted at once — only one is hidden via
+ * CSS) would double the background polling and could see each other's
+ * connect/disconnect drift out of sync. `WalletProvider` (in
+ * `src/components/wallet/WalletProvider.tsx`) runs the one instance the app
+ * uses; components consume it via `useWallet()` from `@/components/wallet`.
  */
 "use client";
 
@@ -35,7 +47,7 @@ import {
   getNetwork as freighterGetNetwork,
   WatchWalletChanges,
 } from "@stellar/freighter-api";
-import { EXPECTED_STELLAR_NETWORK } from "@/lib/config";
+import { EXPECTED_STELLAR_NETWORK, type StellarNetwork } from "@/lib/config";
 
 const SESSION_KEY = "gw_wallet_connected";
 /** How often the live watcher polls Freighter for address/network changes. */
@@ -72,7 +84,11 @@ const initialState: WalletState = {
   freighterMissing: false,
 };
 
-export function useWallet() {
+/** The stateful engine behind wallet connection — see `WalletProvider` doc
+    comment above for why app code should go through that provider's
+    `useWallet()` instead of calling this directly (tests are the
+    exception: they exercise this hook in isolation). */
+export function useWalletState() {
   const [state, setState] = useState<WalletState>(initialState);
   const watcherRef = useRef<WatchWalletChanges | null>(null);
 
@@ -208,3 +224,9 @@ export function useWallet() {
     recheckNetwork,
   };
 }
+
+export type WalletContextValue = ReturnType<typeof useWalletState>;
+
+/** Re-exported so consumers can type `expectedNetwork` precisely without
+    reaching into `@/lib/config` themselves. */
+export type { StellarNetwork };

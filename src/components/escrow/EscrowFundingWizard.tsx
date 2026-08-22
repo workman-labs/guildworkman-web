@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { useWallet } from "@/lib/wallet";
+import { useWallet } from "@/components/wallet";
 import EscrowStepper from "./EscrowStepper";
 import ReviewStep from "./steps/ReviewStep";
 import ConnectWalletStep from "./steps/ConnectWalletStep";

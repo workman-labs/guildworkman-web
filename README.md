@@ -227,7 +227,11 @@ frontend currently does two honest things:
      progress** past that step while on the wrong network, since funding
      escrow there isn't recoverable after the fact.
    - The expected network is configurable via `NEXT_PUBLIC_STELLAR_NETWORK`
-     (defaults to `TESTNET` — see `.env.example`).
+     — one of `PUBLIC` (mainnet) / `TESTNET` / `FUTURENET`, defaults to
+     `TESTNET` (see `.env.example`). This is security-relevant, not just a
+     label: it's what the guard checks a connected wallet against before
+     letting funds move, so it should only be pointed at `PUBLIC` once the
+     backend/contract integration is actually deployed there.
 
    No new dependencies were added — `WatchWalletChanges` and `isAllowed()`
    are both part of the `@stellar/freighter-api` version already in

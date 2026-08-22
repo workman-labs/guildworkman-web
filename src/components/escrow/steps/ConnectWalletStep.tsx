@@ -1,6 +1,6 @@
 import { FaWallet } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
-import { NETWORK_LABELS, truncateAddress } from "@/lib/wallet";
+import { NETWORK_LABELS, truncateAddress, type StellarNetwork } from "@/lib/wallet";
 
 interface ConnectWalletStepProps {
   address: string | null;
@@ -9,7 +9,7 @@ interface ConnectWalletStepProps {
   error: string | null;
   isWrongNetwork: boolean;
   network: string | null;
-  expectedNetwork: string;
+  expectedNetwork: StellarNetwork;
   onConnect: () => void;
 }
 

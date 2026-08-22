@@ -4,8 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /** `@stellar/freighter-api` talks to a real browser extension over
     postMessage — nothing jsdom can answer. Mocked here (via `vi.hoisted` so
-    the factory below can reference it) so `useWallet` is driven purely
-    through controllable promises and a fake `WatchWalletChanges`. */
+    the factory below can reference it) so `useWalletState` is driven purely
+    through controllable promises and a fake `WatchWalletChanges` whose
+    callback we invoke by hand — there's no `setTimeout`/polling in the fake
+    at all, so nothing here depends on real time or fake timers to be
+    deterministic. */
 const freighter = vi.hoisted(() => {
   type WatchCallback = (params: {
     address: string;
@@ -49,7 +52,7 @@ vi.mock("@stellar/freighter-api", () => ({
   WatchWalletChanges: freighter.FakeWatchWalletChanges,
 }));
 
-import { useWallet } from "../wallet";
+import { useWalletState } from "../wallet";
 
 const SESSION_KEY = "gw_wallet_connected";
 
@@ -60,7 +63,7 @@ function latestWatcher() {
 
 /** Minimal consumer exposing the hook's values through DOM attributes. */
 function WalletConsumer() {
-  const wallet = useWallet();
+  const wallet = useWalletState();
   return (
     <div
       data-address={wallet.address ?? ""}
@@ -135,7 +138,7 @@ async function click(testid: string) {
   await flush();
 }
 
-describe("useWallet — connect", () => {
+describe("useWalletState — connect", () => {
   it("populates address/network and persists the session flag on success", async () => {
     freighter.isConnected.mockResolvedValue({ isConnected: true });
     freighter.requestAccess.mockResolvedValue({ address: "GABC1234...WXYZ" });
@@ -189,7 +192,7 @@ describe("useWallet — connect", () => {
   });
 });
 
-describe("useWallet — session restore", () => {
+describe("useWalletState — session restore", () => {
   it("silently restores a session that Freighter still recognizes as allowed", async () => {
     window.localStorage.setItem(SESSION_KEY, "true");
     freighter.isConnected.mockResolvedValue({ isConnected: true });
@@ -236,7 +239,7 @@ describe("useWallet — session restore", () => {
   });
 });
 
-describe("useWallet — live network-switch guard", () => {
+describe("useWalletState — live network-switch guard", () => {
   async function connectOnTestnet() {
     freighter.isConnected.mockResolvedValue({ isConnected: true });
     freighter.requestAccess.mockResolvedValue({ address: "GLIVE..." });
@@ -276,6 +279,31 @@ describe("useWallet — live network-switch guard", () => {
     expect(watcher.stopped).toBe(true);
   });
 
+  it("disconnects and clears the session when Freighter is uninstalled mid-session", async () => {
+    // Distinct from a revoked grant: the extension itself disappears (e.g.
+    // uninstalled, or disabled) between the watcher's polls. Freighter's own
+    // requestPublicKey/requestNetworkDetails calls fail the same way an
+    // access-revocation does — an error on the watch callback with no
+    // address/network — so this exercises the same handling with a scenario
+    // named for what it actually represents in production.
+    await connectOnTestnet();
+    const watcher = latestWatcher();
+
+    await act(async () => {
+      watcher.cb?.({
+        address: "",
+        network: "",
+        networkPassphrase: "",
+        error: "Freighter extension is not installed",
+      });
+    });
+
+    expect(attr("data-address")).toBe("");
+    expect(attr("data-network")).toBe("");
+    expect(window.localStorage.getItem(SESSION_KEY)).toBeNull();
+    expect(watcher.stopped).toBe(true);
+  });
+
   it("recheckNetwork() re-verifies immediately, without waiting for the watcher", async () => {
     await connectOnTestnet();
     expect(attr("data-wrong-network")).toBe("false");
@@ -288,7 +316,7 @@ describe("useWallet — live network-switch guard", () => {
   });
 });
 
-describe("useWallet — disconnect", () => {
+describe("useWalletState — disconnect", () => {
   it("stops the watcher and clears all state", async () => {
     freighter.isConnected.mockResolvedValue({ isConnected: true });
     freighter.requestAccess.mockResolvedValue({ address: "GBYE..." });
