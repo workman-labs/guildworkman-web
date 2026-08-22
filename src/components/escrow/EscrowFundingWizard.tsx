@@ -110,11 +110,14 @@ export default function EscrowFundingWizard({ bookingRef, amount, workerName }: 
     await wallet.connect();
   }
 
+  // Only advance past this step once the wallet is both connected *and* on
+  // the expected network — funding on the wrong network isn't recoverable
+  // after the fact, so the guard has to block progress here, not just warn.
   useEffect(() => {
-    if (wallet.address && state.name === "connectWallet") {
+    if (wallet.address && !wallet.isWrongNetwork && state.name === "connectWallet") {
       dispatch({ type: "WALLET_CONNECTED", address: wallet.address });
     }
-  }, [wallet.address, state.name]);
+  }, [wallet.address, wallet.isWrongNetwork, state.name]);
 
   async function handleFund() {
     dispatch({ type: "FUND_START" });
@@ -184,6 +187,9 @@ export default function EscrowFundingWizard({ bookingRef, amount, workerName }: 
             connecting={wallet.connecting}
             freighterMissing={wallet.freighterMissing}
             error={wallet.error}
+            isWrongNetwork={wallet.isWrongNetwork}
+            network={wallet.network}
+            expectedNetwork={wallet.expectedNetwork}
             onConnect={handleConnectWallet}
           />
         )}

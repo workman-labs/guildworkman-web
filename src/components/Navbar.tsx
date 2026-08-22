@@ -6,6 +6,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import Logo from "./brand/Logo";
 import ThemeToggle from "./ThemeToggle";
 import NotificationCenter from "./notifications/NotificationCenter";
+import WalletButton from "./WalletButton";
 import { buttonClasses } from "./ui/Button";
 
 const navLinks = [
@@ -35,6 +36,7 @@ export default function Navbar() {
         <div className="ml-auto hidden items-center gap-2 sm:flex">
           <ThemeToggle />
           <NotificationCenter />
+          <WalletButton />
           <Link href="/login" className={buttonClasses("outline", "sm")}>
             Log in
           </Link>
@@ -72,6 +74,7 @@ export default function Navbar() {
             ))}
           </nav>
           <div className="mt-3 flex flex-col gap-2">
+            <WalletButton variant="mobile" />
             <Link href="/login" onClick={() => setOpen(false)} className={buttonClasses("outline", "md")}>
               Log in
             </Link>

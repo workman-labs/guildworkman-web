@@ -2,20 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 import { HiLink, HiChevronDown, HiLogout } from "react-icons/hi";
-import { truncateAddress, useWallet } from "@/lib/wallet";
-
-const NETWORK_LABELS: Record<string, string> = {
-  PUBLIC: "Mainnet",
-  TESTNET: "Testnet",
-  FUTURENET: "Futurenet",
-};
+import { NETWORK_LABELS, truncateAddress, useWallet } from "@/lib/wallet";
 
 interface WalletButtonProps {
   variant?: "navbar" | "mobile";
 }
 
 export default function WalletButton({ variant = "navbar" }: WalletButtonProps) {
-  const { address, network, connecting, error, freighterMissing, connect, disconnect } = useWallet();
+  const {
+    address,
+    network,
+    connecting,
+    error,
+    freighterMissing,
+    isWrongNetwork,
+    expectedNetwork,
+    connect,
+    disconnect,
+  } = useWallet();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +34,7 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
   }, []);
 
   const baseButton =
-    "inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-1.5 text-sm text-white hover:bg-white/10 transition-colors";
+    "inline-flex items-center gap-2 rounded-full border border-line px-4 py-1.5 text-sm text-ink hover:border-navy-2 transition-colors";
 
   if (address) {
     return (
@@ -39,7 +43,7 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
           onClick={() => setOpen((o) => !o)}
           className={`${baseButton} ${variant === "mobile" ? "w-full justify-between" : ""}`}
         >
-          <span className="h-2 w-2 rounded-full bg-ok shrink-0" />
+          <span className={`h-2 w-2 rounded-full shrink-0 ${isWrongNetwork ? "bg-gold-deep" : "bg-ok"}`} />
           {truncateAddress(address)}
           <HiChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
@@ -48,6 +52,11 @@ export default function WalletButton({ variant = "navbar" }: WalletButtonProps) 
             <div className="px-4 py-3 border-b border-line">
               <p className="text-xs text-muted">Connected to</p>
               <p className="text-sm font-medium">{network ? NETWORK_LABELS[network] ?? network : "Stellar"}</p>
+              {isWrongNetwork && (
+                <p className="text-xs font-semibold text-gold-deep mt-1">
+                  Switch to {NETWORK_LABELS[expectedNetwork] ?? expectedNetwork} in Freighter
+                </p>
+              )}
               <p className="text-xs text-muted mt-1 break-all">{address}</p>
             </div>
             <button

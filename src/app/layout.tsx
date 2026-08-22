@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/theme";
 import { NotificationProvider } from "@/components/notifications/useNotifications";
 import NotificationToast from "@/components/notifications/NotificationToast";
+import { NetworkGuard } from "@/components/wallet";
 import { themeScript } from "@/lib/theme";
 
 const inter = Inter({
@@ -42,6 +43,7 @@ export default function RootLayout({
         <ThemeProvider>
           <NotificationProvider>
             <Navbar />
+            <NetworkGuard />
             <main className="flex-1">{children}</main>
             <Footer />
             <NotificationToast />

@@ -199,14 +199,39 @@ Java backend that doesn't exist today.
 Rather than pretend that integration is further along than it is, the
 frontend currently does two honest things:
 
-1. **A real wallet connection.** The navbar's "Connect Wallet" button
-   (`src/components/WalletButton.tsx`, `src/lib/wallet.ts`) uses
+1. **A real, resilient wallet connection.** The navbar's "Connect Wallet"
+   button (`src/components/WalletButton.tsx`, `src/lib/wallet.ts`) uses
    `@stellar/freighter-api` to connect an actual Freighter wallet, showing a
-   truncated address, network (Testnet/Mainnet), and a disconnect option. If
-   the Freighter extension isn't installed, it shows an "Install Freighter"
-   hint instead of failing silently. This makes **no contract calls** —
-   booking, payment, and review logic are all unchanged and still go through
-   the backend API/Paystack.
+   truncated address, network (Testnet/Mainnet/Futurenet), and a disconnect
+   option. If the Freighter extension isn't installed, it shows an "Install
+   Freighter" hint instead of failing silently. This makes **no contract
+   calls** — booking, payment, and review logic are all unchanged and still
+   go through the backend API/Paystack.
+
+   On top of the base connection, `useWallet()` (`src/lib/wallet.ts`) adds:
+   - **Session restore across reloads** — a localStorage flag is only a fast
+     hint; the actual restore verifies Freighter's own `isAllowed()` grant
+     before trusting it, so a session revoked inside the extension (or a
+     browser profile that never had it) self-heals instead of showing a
+     stale "connected" UI.
+   - **A live network-switch guard** — Freighter has no API to switch its
+     own network on a dApp's behalf (a deliberate security boundary), so
+     `useWallet` runs Freighter's `WatchWalletChanges` poller for the life
+     of a session and exposes `isWrongNetwork` / `expectedNetwork`.
+     `NetworkGuard` (`src/components/wallet/NetworkGuard.tsx`, mounted
+     app-wide in `src/app/layout.tsx`) shows a banner guiding the user to
+     switch inside Freighter and clears itself automatically once the
+     watcher detects the change — no reload or manual recheck required,
+     though a "check again" button short-circuits the wait.
+     `EscrowFundingWizard`'s connect-wallet step additionally **blocks
+     progress** past that step while on the wrong network, since funding
+     escrow there isn't recoverable after the fact.
+   - The expected network is configurable via `NEXT_PUBLIC_STELLAR_NETWORK`
+     (defaults to `TESTNET` — see `.env.example`).
+
+   No new dependencies were added — `WatchWalletChanges` and `isAllowed()`
+   are both part of the `@stellar/freighter-api` version already in
+   `package.json`.
 2. **An informational trust layer.** The homepage sections (`Hero`,
    `HowItWorks`, `StatsBand`) plus "Escrow protected" badges on worker cards
    and the booking flow explain in plain language what the contracts *will* do
@@ -222,13 +247,15 @@ src/
   components/
     ui/           # design-system primitives (Button, Input, Select, Card, Badge)
     brand/        # the marks as components (Logo, NorthStar, AdinkraPattern)
+    wallet/       # NetworkGuard — app-wide wrong-network banner
     *.tsx         # page-level and shared client components
   lib/
     api.ts        # typed API client — every backend call goes through here
-    config.ts     # API_BASE_URL resolution
+    config.ts     # API_BASE_URL / EXPECTED_STELLAR_NETWORK resolution
     types.ts      # shared request/response types
     constants.ts  # category list and skill-detail seed data
-    wallet.ts     # useWallet() hook wrapping @stellar/freighter-api
+    wallet.ts     # useWallet() hook — connect/session-restore/network-guard
+                   # on top of @stellar/freighter-api
 public/
   assets/         # images used across the app
   brand/          # exported logo marks (SVG masters + 4x PNGs)
