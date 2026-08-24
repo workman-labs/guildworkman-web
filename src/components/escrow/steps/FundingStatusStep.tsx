@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { FaCircleCheck, FaCircleExclamation, FaSpinner } from "react-icons/fa6";
 import { formatNaira } from "@/lib/marketplace";
+import { buttonClasses } from "@/components/ui/Button";
 import type { EscrowFundingContext, EscrowStateName } from "@/lib/escrowFunding";
 
 interface FundingStatusStepProps {
@@ -33,6 +35,14 @@ export default function FundingStatusStep({ state, context }: FundingStatusStepP
             {context.escrowReference}
           </p>
         )}
+        <Link
+          href={`/escrow/${encodeURIComponent(context.bookingRef)}/timeline?worker=${encodeURIComponent(
+            context.workerName,
+          )}`}
+          className={`${buttonClasses("primary", "md")} mt-6`}
+        >
+          Track escrow status
+        </Link>
       </div>
     );
   }
