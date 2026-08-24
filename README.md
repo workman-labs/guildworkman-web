@@ -358,6 +358,17 @@ Default branch is `dev`. Open a PR against `dev` for review before merging.
   real call once that integration lands. `BookingScreen`'s existing one-shot
   "Pay into escrow" button is unchanged; wiring the booking flow to this
   wizard is a follow-up.
+- **Escrow status timeline** (`src/components/escrow/EscrowTimelinePanel.tsx`,
+  `src/lib/escrowTimeline.ts`, route `/escrow/[bookingRef]/timeline`): a
+  live, chronological timeline of the on-chain escrow lifecycle
+  (`funded → completed | cancelled | disputed → resolved`, mirroring the
+  Soroban `escrow` contract's `Status`). User actions apply **optimistically**
+  and either confirm into the history or **roll back gracefully** on failure;
+  a visibility-aware background poll keeps it in sync with the authoritative
+  status. The chain calls live in an isolated stub (`src/lib/escrowChain.ts`)
+  for the same reason `fundEscrow()` does — swap its two functions for a real
+  endpoint when the backend Soroban integration lands. See
+  [`docs/escrow-status-timeline.md`](docs/escrow-status-timeline.md).
 - The wallet-connect button is a real Freighter connection but doesn't yet
   do anything with the connected address — no contract calls, no signing.
   That's intentionally scoped to land alongside the backend Soroban
