@@ -7,6 +7,7 @@ import Logo from "./brand/Logo";
 import ThemeToggle from "./ThemeToggle";
 import NotificationCenter from "./notifications/NotificationCenter";
 import WalletButton from "./WalletButton";
+import LoyaltyDrawer from "./loyalty/LoyaltyDrawer";
 import { buttonClasses } from "./ui/Button";
 
 const navLinks = [
@@ -33,7 +34,9 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="ml-auto hidden items-center gap-2 sm:flex">
+        <LoyaltyDrawer />
+
+        <div className="hidden items-center gap-2 sm:flex">
           <ThemeToggle />
           <NotificationCenter />
           <WalletButton />
@@ -45,7 +48,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="ml-auto flex items-center gap-2 sm:hidden">
+        <div className="flex items-center gap-2 sm:hidden">
           <ThemeToggle />
           <NotificationCenter />
           <button
